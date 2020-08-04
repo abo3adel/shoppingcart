@@ -14,10 +14,9 @@ class CreateCartItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create(Cart::tbAddon() . 'cart_items', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+        Schema::create('cart_items' . Cart::tbAddon(), function (Blueprint $table) {
+            $table->unsignedBigInteger('id', true);
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('product_id');
             $table->integer('qty', false, true);
             if (Cart::fopt()) {
                 $table->string(Cart::fopt());
@@ -27,16 +26,15 @@ class CreateCartItemsTable extends Migration
             }
             $table->float('price');
             $table->string('instance')->nullable();
-            $table->text('options');
+            $table->text('options')->default(
+                json_encode([])
+            );
+
+            $table->morphs('buyable');
 
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('cascade');
-
-            $table->foreign('product_id')
-                ->references('id')
-                ->on('products')
                 ->onDelete('cascade');
 
             $table->timestamps();
@@ -50,6 +48,6 @@ class CreateCartItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Cart::tbAddon() . 'cart_items');
+        Schema::dropIfExists('cart_items' . Cart::tbAddon());
     }
 }

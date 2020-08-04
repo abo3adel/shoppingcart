@@ -19,7 +19,7 @@ class CartItem extends Model
     {
         parent::__construct($attrs);
 
-        $this->table = Cart::tbAddon() . 'cart_items';
+        $this->table = 'cart_items' . Cart::tbAddon();
 
         $this->casts += [
             Cart::fopt() => Cart::opt1Casts(),

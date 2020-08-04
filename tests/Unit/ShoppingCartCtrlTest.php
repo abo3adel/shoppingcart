@@ -40,4 +40,13 @@ class ShoppingCartCtrlTest extends TestCase
             session(config('shoppingcart.session_name'))
         );
     }
+
+    public function testItCanCreateCartItem()
+    {
+        $item = factory(CartItem::class)->create([
+            'price' => 250
+        ]);
+
+        $this->assertSame((float)250, $item->price);
+    }
 }

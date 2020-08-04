@@ -28,6 +28,10 @@ class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix'   => '',
         ]);
+
+        // run migrations
+        // require_once __DIR__ . '/../src/database/migrations/create_cart_items_table.php.stub';
+        // (new \CreateCartItemsTable)->up();
     }
 
     protected function getPackageProviders($app)
