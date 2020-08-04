@@ -11,8 +11,11 @@ class ShoppingCartCtrl
 
     public function __construct()
     {
-        // $this->instance = config('sh')
+        $this->instance = $this->instance ?? $this->config('defaultInstance');
     }
 
-    
+    private function config(string $key): ?string
+    {
+        return config('shoppingcart.'. $key, null);
+    }
 }

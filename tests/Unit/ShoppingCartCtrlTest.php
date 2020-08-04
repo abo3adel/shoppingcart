@@ -14,7 +14,10 @@ class ShoppingCartCtrlTest extends TestCase
 
     public function testGettingCurrentInstance()
     {
-        $this->assertNull(Cart::getInstance());
+        $this->assertSame(
+            config('shoppingcart.defaultInstance'),
+            Cart::getInstance()
+        );
     }
 
     public function testSettingInstance()
@@ -22,5 +25,10 @@ class ShoppingCartCtrlTest extends TestCase
         $this->assertInstanceOf(ShoppingCartCtrl::class, Cart::instance('www'));
 
         $this->assertEquals('www', Cart::getInstance());
+    }
+
+    public function testItWillSetDefaultInstance()
+    {
+        $this->assertSame('default', Cart::getInstance());
     }
 }

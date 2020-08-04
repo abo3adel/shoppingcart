@@ -2,6 +2,7 @@
 
 namespace Abo3adel\ShoppingCart;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/ShoppingCart.php', 'shopping-cart');
+        $this->mergeConfigFrom(__DIR__ . '/../config/shoppingcart.php', 'shoppingcart');
         $this->publishThings();
         // $this->loadViewsFrom(__DIR__.'/resources/views', 'shopping-cart');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
@@ -63,7 +64,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
     public function publishThings(){
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/ShoppingCart.php' => config_path('ShoppingCart.php'),
+                __DIR__ . '/../config/shoppingcart.php' => config_path('shoppingcart.php'),
             ], 'config');
         }
     }

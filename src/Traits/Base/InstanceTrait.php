@@ -18,12 +18,12 @@ trait InstanceTrait {
     /**
      * set cart instance
      *
-     * @param string|null $instance
+     * @param string $instance
      * @return self
      */
-    public function instance(?string $instance): self
+    public function instance(string $instance = null): self
     {
-        $this->instance = $instance;
+        $this->instance = $instance ?? $this->instance ?? $this->config('defaultInstance');
         return $this;
     }
 }
