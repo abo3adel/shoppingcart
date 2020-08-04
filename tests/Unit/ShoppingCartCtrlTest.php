@@ -3,6 +3,7 @@
 namespace Abo3adel\ShoppingCart\Tests\Unit;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\ShoppingCartCtrl;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
