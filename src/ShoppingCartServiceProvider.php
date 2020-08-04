@@ -17,7 +17,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/ShoppingCart.php', 'shopping-cart');
         $this->publishThings();
         // $this->loadViewsFrom(__DIR__.'/resources/views', 'shopping-cart');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->registerRoutes();
     }
 
@@ -56,7 +56,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
     {
         // Register facade
         $this->app->singleton('shopping-cart', function () {
-            return new ShoppingCart;
+            return new ShoppingCartCtrl;
         });
     }
 

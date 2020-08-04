@@ -4,7 +4,7 @@ namespace Abo3adel\ShoppingCart;
 
 use Illuminate\Support\Facades\Facade;
 
-class ShoppingCartFacade extends Facade
+class Cart extends Facade
 {
     /**
      * Get the registered name of the component.
