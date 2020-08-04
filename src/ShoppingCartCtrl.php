@@ -12,6 +12,10 @@ class ShoppingCartCtrl
     public function __construct()
     {
         $this->instance = $this->instance ?? $this->config('defaultInstance');
+
+        if (!session()->has($this->config('session_name'))) {
+            session()->put($this->config('session_name'), []);
+        }
     }
 
     private function config(string $key): ?string

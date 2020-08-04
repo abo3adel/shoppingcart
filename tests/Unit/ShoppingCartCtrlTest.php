@@ -31,4 +31,12 @@ class ShoppingCartCtrlTest extends TestCase
     {
         $this->assertSame('default', Cart::getInstance());
     }
+
+    public function testSettingSessionArray()
+    {
+        Cart::getInstance();
+        $this->assertIsArray(
+            session(config('shoppingcart.session_name'))
+        );
+    }
 }
