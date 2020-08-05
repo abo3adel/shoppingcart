@@ -5,13 +5,17 @@ namespace Abo3adel\ShoppingCart;
 use Abo3adel\ShoppingCart\Traits\Base\AddingMethod;
 use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
+use Abo3adel\ShoppingCart\Traits\Base\UpdatingItemsMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class ShoppingCartCtrl
 {
 
-    use InstanceTrait, GetConfigKeysTrait, AddingMethod;
+    use InstanceTrait,
+        GetConfigKeysTrait,
+        AddingMethod,
+        UpdatingItemsMethod;
 
     public function __construct()
     {
@@ -60,7 +64,9 @@ class ShoppingCartCtrl
                 ->first();
         }
 
-        return  $item['buyable_type'] ? new CartItem($item) : null;
+        $cartItem = is_array($item) ? new CartItem($item) : $item;
+
+        return  $item['buyable_type'] ? $cartItem : null;
     }
 
     /**
@@ -108,6 +114,8 @@ class ShoppingCartCtrl
 
         return collect(session(Cart::sessionName()))
             ->whereStrict('instance', $this->instance)
-            ->map(function ($item) {return new CartItem($item);});
+            ->map(function ($item) {
+                return is_array($item) ? new CartItem($item) : $item;
+            });
     }
 }
