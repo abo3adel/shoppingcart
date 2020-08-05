@@ -220,6 +220,11 @@ class AddingItemsToCartTest extends TestCase
         Cart::add($user, 25);
     }
 
+    public function AddingSameBuyableWillThrowException()
+    {
+        // TODO complete this test after adding a cart item has method
+    }
+
     private function createItem(
         ?int $count = 1,
         ?array $attrs = []

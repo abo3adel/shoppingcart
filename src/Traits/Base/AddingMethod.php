@@ -35,6 +35,7 @@ trait AddingMethod
         ]);
 
         // TODO check if item already exists
+        
 
         $opt1Name = Cart::fopt();
         $opt2Name = Cart::sopt();
