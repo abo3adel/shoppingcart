@@ -56,11 +56,12 @@ class TestCase extends BaseTestCase
 
     protected function createItem(
         ?int $count = 1,
-        ?array $attrs = []
+        ?array $attrs = [],
+        ?string $instance = null
     ) {
         // return factory(CartItem::class, $count)->create($attrs);
         foreach(range(0, $count) as $i) {
-            $item = Cart::add(
+            $item = Cart::instance($instance)->add(
                 factory(SpaceCraft::class)->create($attrs),
                 random_int($i, 64),
                 2,

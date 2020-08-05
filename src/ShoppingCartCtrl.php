@@ -6,6 +6,7 @@ use Abo3adel\ShoppingCart\Traits\Base\AddingMethod;
 use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class ShoppingCartCtrl
 {
@@ -90,5 +91,23 @@ class ShoppingCartCtrl
 
                 return $val['id'] === $itemId;
             });
+    }
+
+    /**
+     * retrive cart content
+     *
+     * @return Collection
+     */
+    public function content(): Collection
+    {
+        if (auth()->check()) {
+            return CartItem::whereInstance($this->instance)
+                ->whereUserId(auth()->id())
+                ->get();
+        }
+
+        return collect(session(Cart::sessionName()))
+            ->whereStrict('instance', $this->instance)
+            ->map(function ($item) {return new CartItem($item);});
     }
 }

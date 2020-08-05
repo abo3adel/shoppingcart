@@ -23,7 +23,7 @@ trait InstanceTrait {
      */
     public function instance(string $instance = null): self
     {
-        $this->instance = $instance ?? $this->instance ?? $this->config('defaultInstance');
+        $this->instance = $instance ?? $this->config('defaultInstance');
         return $this;
     }
 }
