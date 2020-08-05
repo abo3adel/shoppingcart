@@ -2,6 +2,7 @@
 
 namespace Abo3adel\ShoppingCart\Tests\Feature;
 
+use Abo3adel\ShoppingCart\Car;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\SpaceCraft;
@@ -19,7 +20,7 @@ class FindingItemTest extends TestCase
         $model = factory(SpaceCraft::class)->create([
             'price' => 225.24
         ]);
-        $item = Cart::add($model, 5);
+        $item = Cart::add($model, 66);
         $this->createItem(2);
 
         $found = Cart::find($item->id);
@@ -40,16 +41,31 @@ class FindingItemTest extends TestCase
         $model = factory(SpaceCraft::class)->create([
             'price' => 225.24
         ]);
-        $item = Cart::add($model, 5, 22);
+        $item = Cart::add($model, 88, 931);
         $this->createItem(2);
 
-        $found = Cart::find($item->buyable_id, SpaceCraft::class);
+        $found = Cart::find($model->id, SpaceCraft::class);
         
         $this->assertSame(
             $item->qty,
             $found->qty
         );
 
-        $this->assertNull(Cart::find(56345));
+        $this->assertNull(Cart::find(25));
+        $this->assertNull(Cart::find(2, Car::class));
+    }
+
+    public function testUserCanFindItemById()
+    {
+        $this->signIn();
+
+        $this->testGuestCanFindItemById();
+    }
+
+    public function testUserCanFindItemByBuyable()
+    {
+        $this->signIn();
+
+        $this->testGuestCanFindItemByBuyable();
     }
 }

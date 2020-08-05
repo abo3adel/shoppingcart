@@ -21,11 +21,30 @@ class ShoppingCartCtrl
         }
     }
 
+    /**
+     * retrive item from cart
+     * 
+     * @example find(5)
+     * @example find(2, 'App\Product')
+     *
+     * @param integer $itemId
+     * @param string|null $buyableType
+     * @return CartItem|null
+     */
     public function find(
         int $itemId,
         ?string $buyableType = null
     ): ?CartItem {
         if (auth()->check()) {
+            if (null !== $buyableType) {
+                return CartItem::whereInstance($this->instance)
+                    ->whereUserId(auth()->id())
+                    ->where('buyable_id', $itemId)
+                    ->where('buyable_type', $buyableType)
+                    ->first();
+            }
+
+            return CartItem::find($itemId);
         }
 
         $item = collect(session(Cart::sessionName()))
