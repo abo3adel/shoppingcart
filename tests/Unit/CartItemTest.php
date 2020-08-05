@@ -48,9 +48,9 @@ class CartItemTest extends TestCase
             'buyable_type' => Car::class,
         ]);
 
-        $this->assertInstanceOf(
+        $this->assertSame(
             Car::class,
-            $item->buyable
+            $item->buyable_type
         );
     }
 }

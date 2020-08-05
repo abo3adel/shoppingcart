@@ -4,6 +4,7 @@ namespace Abo3adel\ShoppingCart\Traits\Base;
 
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Events\CartItemAdded;
 use Illuminate\Database\Eloquent\Model;
 
 trait AddingMethod
@@ -45,15 +46,21 @@ trait AddingMethod
 
         // check if user is logged in THEN save into database
         if (auth()->check()) {
-            return CartItem::create([
+            $item = CartItem::create([
                 'user_id' => auth()->id(),
             ] + $item->toArray());
+
+            event(new CartItemAdded($item));
+
+            return $item;
         }
 
         // generate random id for item in sessio
         $item->id = $this->generateId();
 
         collect(session(Cart::sessionName()))->push($item);
+
+        event(new CartItemAdded($item));
 
         return $item;
     }

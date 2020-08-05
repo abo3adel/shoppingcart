@@ -4,8 +4,10 @@ namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Events\CartItemAdded;
 use Abo3adel\ShoppingCart\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
@@ -188,6 +190,23 @@ class AddingItemsToCartTest extends TestCase
                 'instance' => 'compare',
             ]
         );
+    }
+
+    public function testAddingNewItemWillFireEvent()
+    {
+        Event::fake();
+
+        $this->testGuestCanAddItemWithMinimalArgs();
+
+        Event::assertDispatched(CartItemAdded::class, function ($ev) {
+            return $ev->item->price === (float)553;
+        });
+
+        $this->signIn();
+        $this->testGuestCanAddItemWithoutFirstOpt();
+        Event::assertDispatched(CartItemAdded::class, function ($ev) {
+            return $ev->item->qty === 99;
+        });
     }
 
     private function createItem(
