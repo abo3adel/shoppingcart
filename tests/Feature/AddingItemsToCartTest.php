@@ -6,6 +6,7 @@ use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\Events\CartItemAdded;
 use Abo3adel\ShoppingCart\Exceptions\InvalidModelException;
+use Abo3adel\ShoppingCart\Exceptions\ItemAlreadyExistsException;
 use Abo3adel\ShoppingCart\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Auth\User;
@@ -220,8 +221,16 @@ class AddingItemsToCartTest extends TestCase
         Cart::add($user, 25);
     }
 
-    public function AddingSameBuyableWillThrowException()
+    public function testAddingSameBuyableWillThrowException()
     {
-        // TODO complete this test after adding a cart item has method
+        $model = factory(SpaceCraft::class)->create();
+        Cart::add($model, 25);
+
+        $this->createItem(4);
+
+        Cart::instance('wishlist')->add($model, 47);
+
+        $this->expectException(ItemAlreadyExistsException::class);
+        Cart::add($model, 3);
     }
 }

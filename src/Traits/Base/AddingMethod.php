@@ -6,6 +6,7 @@ use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\Events\CartItemAdded;
 use Abo3adel\ShoppingCart\Exceptions\InvalidModelException;
+use Abo3adel\ShoppingCart\Exceptions\ItemAlreadyExistsException;
 use Illuminate\Database\Eloquent\Model;
 
 trait AddingMethod
@@ -14,8 +15,8 @@ trait AddingMethod
      * add item to cart
      * 
      * @example add(Model, qty)
-     * @example add(Model, opt1, opt2, options)
-     * @example add(Model, options)
+     * @example add(Model, qty, opt1, opt2, options)
+     * @example add(Model, qty, options)
      * 
      *
      * @param Model $buyable
@@ -49,8 +50,10 @@ trait AddingMethod
             'qty' => $qty,
         ]);
 
-        // TODO check if item already exists
-        
+        // throw exc if item was already added before
+        if ($this->has($buyable->id, get_class($buyable))) {
+            throw new ItemAlreadyExistsException();
+        }
 
         $opt1Name = Cart::fopt();
         $opt2Name = Cart::sopt();
@@ -105,8 +108,7 @@ trait AddingMethod
     {
         $id = random_int(1, 999999999);
 
-        // TODO check for existence with another method
-        if (count(collect(session(Cart::sessionName()))->where('id', $id))) {
+        if ($this->has($id)) {
             $id = $this->generateId();
         }
 
