@@ -3,6 +3,7 @@
 namespace Abo3adel\ShoppingCart\Tests;
 
 use Abo3adel\ShoppingCart\ShoppingCartServiceProvider;
+use Illuminate\Foundation\Auth\User;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -37,5 +38,16 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [ShoppingCartServiceProvider::class];
+    }
+
+    public function signIn(?User $user = null, array $attrs = []): User
+    {
+        if (null === $user) {
+            $user = factory(User::class)->create($attrs);
+        }
+
+        $this->actingAs($user);
+
+        return $user;
     }
 }

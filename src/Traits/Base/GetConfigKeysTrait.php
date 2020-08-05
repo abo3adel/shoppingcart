@@ -2,6 +2,8 @@
 
 namespace Abo3adel\ShoppingCart\Traits\Base;
 
+use Abo3adel\ShoppingCart\CartItem;
+
 trait GetConfigKeysTrait
 {
     /**
@@ -72,6 +74,16 @@ trait GetConfigKeysTrait
     public function opt2Casts(): string
     {
         return $this->config('casts.opt2');
+    }
+
+    /**
+     * get current cart items table name
+     *
+     * @return string
+     */
+    public function tbName(): string
+    {
+        return (new CartItem())->getTable();
     }
 
     private function config(string $key): ?string

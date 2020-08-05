@@ -45,7 +45,9 @@ trait AddingMethod
 
         // check if user is logged in THEN save into database
         if (auth()->check()) {
-            
+            return CartItem::create([
+                'user_id' => auth()->id(),
+            ] + $item->toArray());
         }
 
         // generate random id for item in sessio

@@ -37,6 +37,9 @@ class AddingItemsToCartTest extends TestCase
         $this->assertSame(6, $item->{Cart::fopt()});
         $this->assertNull($item->{Cart::sopt()});
 
+        $buyable = factory(SpaceCraft::class)->create([
+            'price' => 15056
+        ]);
         $item = Cart::add($buyable, 70, 4, 13);
         $this->assertSame(70, $item->qty);
         $this->assertSame(4, $item->{Cart::fopt()});
@@ -50,7 +53,7 @@ class AddingItemsToCartTest extends TestCase
         ]);
 
         $item = Cart::add($buyable, 66, 5, 2, [
-            'name' => $this->faker->name
+            'name' => 'asd'
         ]);
         $this->assertSame((float)167, $item->price);
         $this->assertSame(66, $item->qty);
@@ -65,7 +68,7 @@ class AddingItemsToCartTest extends TestCase
 
         Config::set('shoppingcart.opt1', null);
         $item = Cart::add($buyable, 99, [
-            'name' => $this->faker->name
+            'name' => 'asd'
         ]);
         $this->assertSame(99, $item->qty);
         $this->assertArrayHasKey('name', $item->options);
@@ -75,19 +78,122 @@ class AddingItemsToCartTest extends TestCase
     {
         $buyable = factory(SpaceCraft::class)->create();
 
+        Config::set('shoppingcart.opt1', 'size');
         Config::set('shoppingcart.opt2', null);
         $item = Cart::add($buyable, 17, 96, [
-            'name' => $this->faker->name
+            'name' => 'asd'
         ]);
         $this->assertSame(17, $item->qty);
         $this->assertSame(96, $item->{Cart::fopt()});
         $this->assertArrayHasKey('name', $item->options);
     }
 
+    public function testGuestCanAddSameBuyableObjectInDefirentInstances()
+    {
+        $buyable = factory(SpaceCraft::class)->create();
+        $defu = Cart::instance()->add($buyable, 250);
+
+        $wish = Cart::instance('wishlist')->add($buyable, 60);
+
+        $cmp = Cart::instance('compare')->add($buyable, 4);
+
+        $this->assertSame('default', $defu->instance);
+        $this->assertSame('wishlist', $wish->instance);
+        $this->assertSame('compare', $cmp->instance);
+    }
+
+    public function testUserCanAddItems()
+    {
+        $this->signIn();
+
+        $this->testGuestCanAddItemWithMinimalArgs();
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'price' => 553,
+                'qty' => 22,
+                'buyable_id' => 1,
+            ]
+        );
+
+        $this->testGuestCanAddItemWithOpt1AndOpt2();
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'price' => 15056,
+                'qty' => 70,
+                Cart::fopt() => 4,
+                Cart::sopt() => 13
+            ]
+        );
+
+        $this->testGuestCanAddItemWithAllArgs();
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'price' => 167,
+                'qty' => 66,
+                Cart::fopt() => 5,
+                Cart::sopt() => 2,
+                'options' => json_encode([
+                    'name' => 'asd'
+                ])
+            ]
+        );
+
+        $this->testGuestCanAddItemWithoutFirstOpt();
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'qty' => 99,
+                'options' => json_encode([
+                    'name' => 'asd'
+                ]),
+                'instance' => 'default',
+            ]
+        );
+
+        $this->testGuestCanAddItemWithoutSecondOpt();
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'qty' => 17,
+                Cart::fopt() => 96,
+                'options' => json_encode([
+                    'name' => 'asd'
+                ]),
+                'instance' => 'default',
+            ]
+        );
+
+        $this->testGuestCanAddSameBuyableObjectInDefirentInstances();
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'qty' => 250,
+                'instance' => 'default',
+            ]
+        );
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'qty' => 60,
+                'instance' => 'wishlist',
+            ]
+        );
+        $this->assertDatabaseHas(
+            Cart::tbName(),
+            [
+                'qty' => 4,
+                'instance' => 'compare',
+            ]
+        );
+    }
+
     private function createItem(
         ?int $count = 1,
         ?array $attrs = []
     ) {
-        return factory(CartItem::class, $count)->create($attrs); 
+        return factory(CartItem::class, $count)->create($attrs);
     }
 }

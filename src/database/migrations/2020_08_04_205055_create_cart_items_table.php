@@ -19,16 +19,16 @@ class CreateCartItemsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->integer('qty', false, true);
             if (Cart::fopt()) {
-                $table->string(Cart::fopt());
+                $table->string(Cart::fopt())->nullable();
             }
             if (Cart::sopt()) {
-                $table->string(Cart::sopt());
+                $table->string(Cart::sopt())->nullable();
             }
             $table->float('price');
             $table->string('instance')->nullable();
             $table->text('options')->default(
                 json_encode([])
-            );
+            )->nullable();
 
             $table->morphs('buyable');
 
