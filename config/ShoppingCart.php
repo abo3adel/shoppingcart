@@ -11,7 +11,7 @@ return [
     "addon" => "_shoppingcart",
 
     // optional 2 cols
-    // set to null, if not used
+    // set to null, if not needed
     "opt1" => "size",
     "opt2" => "color",
 

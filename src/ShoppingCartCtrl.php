@@ -2,13 +2,14 @@
 
 namespace Abo3adel\ShoppingCart;
 
+use Abo3adel\ShoppingCart\Traits\Base\AddingMethod;
 use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
 
 class ShoppingCartCtrl
 {
 
-    use InstanceTrait, GetConfigKeysTrait;
+    use InstanceTrait, GetConfigKeysTrait, AddingMethod;
 
     public function __construct()
     {
