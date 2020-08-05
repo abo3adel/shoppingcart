@@ -3,6 +3,7 @@
 namespace Abo3adel\ShoppingCart;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class CartItem extends Model
 {
@@ -25,5 +26,15 @@ class CartItem extends Model
             Cart::fopt() => Cart::opt1Casts(),
             Cart::sopt() => Cart::opt2Casts(),
         ];
+    }
+
+    /**
+     * Get the owning buyable model
+     *
+     * @return MorphTo
+     */
+    public function buyable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

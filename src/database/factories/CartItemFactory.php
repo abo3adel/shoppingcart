@@ -20,8 +20,8 @@ $factory->define(Abo3adel\ShoppingCart\CartItem::class, function (Faker $faker) 
         'buyable_type' => $buyableType,
         'buyable_id' => $buyable->id,
         'price' => $buyable->price,
-        'qty' => $buyable->qty,
-        'options' => json_encode([]),
+        'qty' => $buyable->qty ?? random_int(10, 90),
+        'options' => [],
     ];
 
     if (Cart::fopt()) {
