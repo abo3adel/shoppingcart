@@ -61,4 +61,34 @@ class ShoppingCartCtrl
 
         return  $item['buyable_type'] ? new CartItem($item) : null;
     }
+
+    /**
+     * check if item exists in cart
+     * 
+     * @param integer $itemId
+     * @param string|null $buyableType
+     * @return boolean
+     */
+    public function has(
+        int $itemId,
+        ?string $buyableType = null
+    ): bool {
+        if (auth()->check()) {
+            return !!($this->find($itemId, $buyableType));
+        }
+
+        return collect(session(Cart::sessionName()))
+            ->whereStrict('instance', $this->instance)
+            ->contains(function ($val) use (
+                $itemId,
+                $buyableType
+            ) {
+                if (null !== $buyableType) {
+                    return $val['buyable_id'] === $itemId &&
+                        $val['buyable_type'] === $buyableType;
+                }
+
+                return $val['id'] === $itemId;
+            });
+    }
 }
