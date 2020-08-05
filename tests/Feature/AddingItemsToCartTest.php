@@ -224,11 +224,4 @@ class AddingItemsToCartTest extends TestCase
     {
         // TODO complete this test after adding a cart item has method
     }
-
-    private function createItem(
-        ?int $count = 1,
-        ?array $attrs = []
-    ) {
-        return factory(CartItem::class, $count)->create($attrs);
-    }
 }

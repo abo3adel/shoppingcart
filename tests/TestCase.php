@@ -2,7 +2,10 @@
 
 namespace Abo3adel\ShoppingCart\Tests;
 
+use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\ShoppingCartServiceProvider;
+use Abo3adel\ShoppingCart\SpaceCraft;
 use Illuminate\Foundation\Auth\User;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
@@ -49,5 +52,22 @@ class TestCase extends BaseTestCase
         $this->actingAs($user);
 
         return $user;
+    }
+
+    protected function createItem(
+        ?int $count = 1,
+        ?array $attrs = []
+    ) {
+        // return factory(CartItem::class, $count)->create($attrs);
+        foreach(range(0, $count) as $i) {
+            $item = Cart::add(
+                factory(SpaceCraft::class)->create($attrs),
+                random_int($i, 64),
+                2,
+                9
+            );
+        }
+
+        return $item;
     }
 }

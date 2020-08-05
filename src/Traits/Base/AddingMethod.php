@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 
 trait AddingMethod
 {
+    /**
+     * add item to cart
+     * 
+     * @example add(Model, qty)
+     * @example add(Model, opt1, opt2, options)
+     * @example add(Model, options)
+     * 
+     *
+     * @param Model $buyable
+     * @param mixed|float $qty
+     * @param mixed|null $opt1
+     * @param mixed|null $opt2
+     * @param array $options
+     * @return CartItem
+     */
     public function add(
         Model $buyable,
         $qty,
@@ -70,7 +85,11 @@ trait AddingMethod
         // generate random id for item in sessio
         $item->id = $this->generateId();
 
-        collect(session(Cart::sessionName()))->push($item);
+        session([
+            Cart::sessionName() => (
+                collect(session(Cart::sessionName()))->push($item)
+            )->toArray()
+        ]);
 
         event(new CartItemAdded($item));
 
