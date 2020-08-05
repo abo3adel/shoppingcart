@@ -5,8 +5,10 @@ namespace Abo3adel\ShoppingCart\Tests\Feature;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\Events\CartItemAdded;
+use Abo3adel\ShoppingCart\Exceptions\InvalidModelException;
 use Abo3adel\ShoppingCart\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -207,6 +209,15 @@ class AddingItemsToCartTest extends TestCase
         Event::assertDispatched(CartItemAdded::class, function ($ev) {
             return $ev->item->qty === 99;
         });
+    }
+
+    public function testAddingBuyableModelWithoutRequiredAttributesWillThrowException()
+    {
+        $user = factory(User::class)->create();
+
+        $this->expectException(InvalidModelException::class);
+
+        Cart::add($user, 25);
     }
 
     private function createItem(

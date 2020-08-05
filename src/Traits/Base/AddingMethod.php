@@ -5,6 +5,7 @@ namespace Abo3adel\ShoppingCart\Traits\Base;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\Events\CartItemAdded;
+use Abo3adel\ShoppingCart\Exceptions\InvalidModelException;
 use Illuminate\Database\Eloquent\Model;
 
 trait AddingMethod
@@ -16,6 +17,14 @@ trait AddingMethod
         $opt2 = null,
         $options = []
     ): CartItem {
+        // check if buyable model have required attributes
+        // price, id
+        if (null === $buyable->price || null === $buyable->id) {
+            throw new InvalidModelException(
+                'model missing required attributes ( price - id )'
+            );
+        }
+
         $item = new CartItem([
             'buyable_type' => get_class($buyable),
             'buyable_id' => $buyable->id,
@@ -24,6 +33,8 @@ trait AddingMethod
             'price' => $buyable->price,
             'qty' => $qty,
         ]);
+
+        // TODO check if item already exists
 
         $opt1Name = Cart::fopt();
         $opt2Name = Cart::sopt();
