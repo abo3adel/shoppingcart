@@ -4,10 +4,12 @@ namespace Abo3adel\ShoppingCart;
 
 use Abo3adel\ShoppingCart\Traits\Base\AddingMethod;
 use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
+use Abo3adel\ShoppingCart\Traits\Base\Helpers;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
 use Abo3adel\ShoppingCart\Traits\Base\UpdatingItemsMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ShoppingCartCtrl
 {
@@ -15,7 +17,8 @@ class ShoppingCartCtrl
     use InstanceTrait,
         GetConfigKeysTrait,
         AddingMethod,
-        UpdatingItemsMethod;
+        UpdatingItemsMethod,
+        Helpers;
 
     public function __construct()
     {
