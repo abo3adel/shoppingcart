@@ -3,6 +3,7 @@
 namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\Exceptions\ItemNotFoundException;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -93,5 +94,12 @@ class UpdatingCartItemTest extends TestCase
     {
         $this->signIn();
         $this->testGuestCanUpdateItem();
+    }
+
+    public function testUpdatingInvalidItemWillThrowExc()
+    {
+        $this->expectException(ItemNotFoundException::class);
+
+        Cart::update(63, 5);
     }
 }

@@ -4,9 +4,25 @@ namespace Abo3adel\ShoppingCart\Traits\Base;
 
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Exceptions\ItemNotFoundException;
 
 trait UpdatingItemsMethod
 {
+    /**
+     * update cart item by item_id
+     * 
+     * @example update(itemID, qty)
+     * @example update(itemID, options[])
+     * @example update(itemID, qty, opt1, options[])
+     * @example update(itemID, qty, opt1, opt2, options[])
+     *
+     * @param integer $itemId
+     * @param mixed $qty
+     * @param mixed $opt1
+     * @param mixed $opt2
+     * @param array $options
+     * @return boolean
+     */
     public function update(
         int $itemId,
         $qty,
@@ -14,7 +30,9 @@ trait UpdatingItemsMethod
         $opt2 = null,
         array $options = []
     ): bool {
-        // TODO throw exception if item not found
+        if (!$this->has($itemId)) {
+            throw new ItemNotFoundException();
+        }
 
         if (auth()->check()) {
             $item = $this->find($itemId);
