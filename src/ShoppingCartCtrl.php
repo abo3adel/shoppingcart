@@ -118,4 +118,29 @@ class ShoppingCartCtrl
                 return is_array($item) ? new CartItem($item) : $item;
             });
     }
+
+    /**
+     * remove item from cart
+     *
+     * @param integer $itemId
+     * @return boolean
+     */
+    public function delete(int $itemId): bool
+    {
+        if (auth()->check()) {
+            return ($this->find($itemId))->delete();
+        }
+
+        $items = collect(session(Cart::sessionName()))
+            ->filter(function ($item) use ($itemId) {
+                $item = (object) $item;
+
+                if ($item->instance === $this->instance) {
+                    return $item->id !== $itemId;
+                }
+                return $item;
+            });
+
+        return !!(session([Cart::sessionName() => $items]));
+    }
 }
