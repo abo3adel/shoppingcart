@@ -2,9 +2,9 @@
 
 namespace Abo3adel\ShoppingCart\Tests\Unit;
 
-use Abo3adel\ShoppingCart\Car;
+use Abo3adel\ShoppingCart\Tests\Model\Car;
 use Abo3adel\ShoppingCart\CartItem;
-use Abo3adel\ShoppingCart\SpaceCraft;
+use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

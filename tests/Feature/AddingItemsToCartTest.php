@@ -7,7 +7,7 @@ use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\Events\CartItemAdded;
 use Abo3adel\ShoppingCart\Exceptions\InvalidModelException;
 use Abo3adel\ShoppingCart\Exceptions\ItemAlreadyExistsException;
-use Abo3adel\ShoppingCart\SpaceCraft;
+use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;

@@ -5,7 +5,7 @@ namespace Abo3adel\ShoppingCart\Tests;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\ShoppingCartServiceProvider;
-use Abo3adel\ShoppingCart\SpaceCraft;
+use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Illuminate\Foundation\Auth\User;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 

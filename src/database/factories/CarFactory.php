@@ -1,9 +1,10 @@
 <?php
 
+use Abo3adel\ShoppingCart\Tests\Model\Car;
 use Faker\Generator as Faker;
 use Illuminate\Foundation\Auth\User;
 
-$factory->define(Abo3adel\ShoppingCart\Car::class, function (Faker $faker) {
+$factory->define(Car::class, function (Faker $faker) {
     return [
         'user_id' => factory(User::class)->create(),
         'title' => $faker->sentence,

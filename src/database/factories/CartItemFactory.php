@@ -1,8 +1,8 @@
 <?php
 
-use Abo3adel\ShoppingCart\Car;
+use Abo3adel\ShoppingCart\Tests\Model\Car;
 use Abo3adel\ShoppingCart\Cart;
-use Abo3adel\ShoppingCart\SpaceCraft;
+use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Faker\Generator as Faker;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Arr;
