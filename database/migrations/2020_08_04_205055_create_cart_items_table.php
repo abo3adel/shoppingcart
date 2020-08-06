@@ -25,11 +25,12 @@ class CreateCartItemsTable extends Migration
                 $table->string(Cart::sopt())->nullable();
             }
             $table->float('price');
-            $table->string('instance')->nullable();
+            $table->string('instance')->nullable()->default(
+                Cart::defaultInstance()
+            );
             $table->text('options')->default(
                 json_encode([])
             )->nullable();
-
             $table->morphs('buyable');
 
             $table->foreign('user_id')
