@@ -88,4 +88,10 @@ class UpdatingCartItemTest extends TestCase
             (Cart::find($wish->id))->options
         );
     }
+
+    public function testUserCanUpdateItem()
+    {
+        $this->signIn();
+        $this->testGuestCanUpdateItem();
+    }
 }
