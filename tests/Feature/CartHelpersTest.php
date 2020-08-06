@@ -3,6 +3,7 @@
 namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,5 +43,40 @@ class CartHelpersTest extends TestCase
         $this->signIn();
 
         $this->testGuestCanCalculateItemsTotal();
+    }
+
+    public function testGuestCanCalculateItemTotalPrice()
+    {
+        $this->createItemWithData(1, 9, 5);
+        $this->createItemWithData(4, 25, 7);
+
+        $this->createItemWithData(1, 6.5, 10, 'wish');
+        $this->createItemWithData(3, 14, 3, 'wish');
+
+        $this->assertSame(109.0, Cart::instance()->totalPrice());
+        $this->assertSame(48.5, Cart::instance('wish')->totalPrice());
+    }
+
+    public function testUserCanGetItemTotalPrice()
+    {
+        $this->signIn();
+
+        $this->testGuestCanCalculateItemTotalPrice();
+    }
+
+    private function createItemWithData(
+        int $count = 1,
+        float $price,
+        int $qty,
+        ?string $instance = null
+    ): CartItem {
+        foreach (range(1, $count) as $i) {
+            $item = Cart::instance($instance)->add(
+                factory(SpaceCraft::class)->create(['price' => $price]),
+                $qty
+            );
+        }
+
+        return $item;
     }
 }

@@ -15,7 +15,7 @@ trait Helpers
     public function total(): float
     {
         if (auth()->check()) {
-            return round($this->dbSum('price * qty'), 2);
+            return $this->dbSum('price * qty');
         }
 
         return $this->content()->sum(function ($item) {
@@ -24,17 +24,34 @@ trait Helpers
     }
 
     /**
-     * sum cloums in database
+     * calculate total price only
      *
-     * @param string $exp cols to sum
+     * @return float
+     */
+    public function totalPrice(): float
+    {
+        if (auth()->check()) {
+            return $this->dbSum('price');
+        }
+
+        return round($this->content()->sum('price'), 2);
+    }
+
+    /**
+     * sum cloumns in database
+     *
+     * @param string $exp columns to sum
      * @return float
      */
     private function dbSum(string $exp = ''): float
     {
-        return DB::table(Cart::tbName())
-            ->selectRaw('SUM(' . $exp . ') AS total')
-            ->where('user_id', auth()->id())
-            ->where('instance', $this->instance)
-            ->first()->total;
+        return round(
+            DB::table(Cart::tbName())
+                ->selectRaw('SUM(' . $exp . ') AS total')
+                ->where('user_id', auth()->id())
+                ->where('instance', $this->instance)
+                ->first()->total,
+            2
+        );
     }
 }
