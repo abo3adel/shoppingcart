@@ -17,10 +17,10 @@ class TestCase extends BaseTestCase
         $this->withoutExceptionHandling();
         $this->artisan('migrate', ['--database' => 'testing']);
         
-        $this->loadMigrationsFrom(__DIR__ . '/../src/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadLaravelMigrations(['--database' => 'testing']);
         
-        $this->withFactories(__DIR__.'/../src/database/factories');
+        $this->withFactories(__DIR__.'/../database/factories');
     }
 
     protected function getEnvironmentSetUp($app)

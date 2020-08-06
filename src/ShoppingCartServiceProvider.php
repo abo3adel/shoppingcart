@@ -18,7 +18,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/shoppingcart.php', 'shoppingcart');
         $this->publishThings();
         // $this->loadViewsFrom(__DIR__.'/resources/views', 'shopping-cart');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         // $this->registerRoutes();
     }
 
@@ -69,7 +69,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
             ], 'config');
 
             $this->publishes([
-                __DIR__ . '/../database/migrations/create_cart_items_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_cart_items_table.php'),
+                __DIR__ . '/../../database/migrations/create_cart_items_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_cart_items_table.php'),
                 // you can add any number of migrations here
             ], 'migrations');
         }
