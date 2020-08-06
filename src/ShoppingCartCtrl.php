@@ -2,6 +2,7 @@
 
 namespace Abo3adel\ShoppingCart;
 
+use Abo3adel\ShoppingCart\Events\CartItemRemoved;
 use Abo3adel\ShoppingCart\Traits\Base\AddingMethod;
 use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
 use Abo3adel\ShoppingCart\Traits\Base\Helpers;
@@ -131,7 +132,14 @@ class ShoppingCartCtrl
     public function delete(int $itemId): bool
     {
         if (auth()->check()) {
-            return ($this->find($itemId))->delete();
+            $item = $this->find($itemId);
+
+            if ($item->delete()) {
+                event(new CartItemRemoved($item));
+                return true;
+            }
+
+            return false;
         }
 
         $items = collect(session(Cart::sessionName()))
@@ -139,6 +147,11 @@ class ShoppingCartCtrl
                 $item = (object) $item;
 
                 if ($item->instance === $this->instance) {
+                    if ($item->id === $itemId) {
+                        event(new CartItemRemoved(
+                            new CartItem((array) $item)
+                        ));
+                    }
                     return $item->id !== $itemId;
                 }
                 return $item;

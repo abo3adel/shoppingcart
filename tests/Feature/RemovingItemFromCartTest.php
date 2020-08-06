@@ -3,8 +3,10 @@
 namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\Events\CartItemRemoved;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
 class RemovingItemFromCartTest extends TestCase
 {
@@ -12,8 +14,8 @@ class RemovingItemFromCartTest extends TestCase
 
     public function testGuestCanRemoveItemByItemId()
     {
-        $item = $this->createItem(5);
-        $wish = $this->createItem(4, [], 'wish');
+        $item = $this->createItem(5, ['price' => 25]);
+        $wish = $this->createItem(4, ['price' => 220], 'wish');
         $this->createItem(3);
         $this->createItem(11, [], 'wish');
 
@@ -36,5 +38,33 @@ class RemovingItemFromCartTest extends TestCase
         $this->signIn();
 
         $this->testGuestCanRemoveItemByItemId();
+    }
+
+    public function testGuestRemovingWillFireEvent()
+    {
+        Event::fake();
+
+        $this->testGuestCanRemoveItemByItemId();
+
+        Event::assertDispatched(CartItemRemoved::class, function ($ev) {
+            return $ev->item->price === (float)25;
+        });
+        Event::assertDispatched(CartItemRemoved::class, function ($ev) {
+            return $ev->item->price === (float)220;
+        });
+    }
+
+    public function testUserRemovingWillFireEvent()
+    {
+        Event::fake();
+
+        $this->testUserCanRemoveItem();
+
+        Event::assertDispatched(CartItemRemoved::class, function ($ev) {
+            return $ev->item->price === (float)25;
+        });
+        Event::assertDispatched(CartItemRemoved::class, function ($ev) {
+            return $ev->item->price === (float)220;
+        });
     }
 }

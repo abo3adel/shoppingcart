@@ -5,6 +5,7 @@ namespace Abo3adel\ShoppingCart\Tests\Feature;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
+use Illuminate\Support\Facades\Event;
 
 class RetrivingContentTest extends TestCase
 {
