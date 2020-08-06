@@ -56,7 +56,7 @@ class ShoppingCartCtrl
             return CartItem::find($itemId);
         }
 
-        $item = collect(session(Cart::sessionName()))
+        $item = collect(session($this->sessionName()))
             ->whereStrict('instance', $this->instance);
 
         if (null !== $buyableType) {
@@ -88,7 +88,7 @@ class ShoppingCartCtrl
             return !!($this->find($itemId, $buyableType));
         }
 
-        return collect(session(Cart::sessionName()))
+        return collect(session($this->sessionName()))
             ->whereStrict('instance', $this->instance)
             ->contains(function ($val) use (
                 $itemId,
@@ -116,7 +116,7 @@ class ShoppingCartCtrl
                 ->get();
         }
 
-        return collect(session(Cart::sessionName()))
+        return collect(session($this->sessionName()))
             ->whereStrict('instance', $this->instance)
             ->map(function ($item) {
                 return is_array($item) ? new CartItem($item) : $item;
@@ -142,7 +142,7 @@ class ShoppingCartCtrl
             return false;
         }
 
-        $items = collect(session(Cart::sessionName()))
+        $items = collect(session($this->sessionName()))
             ->filter(function ($item) use ($itemId) {
                 $item = (object) $item;
 
@@ -157,7 +157,7 @@ class ShoppingCartCtrl
                 return $item;
             });
 
-        return !!(session([Cart::sessionName() => $items]));
+        return !!(session([$this->sessionName() => $items]));
     }
 
     /**
@@ -173,12 +173,12 @@ class ShoppingCartCtrl
                 ->delete();
         }
 
-        $items = collect(session(Cart::sessionName()))
+        $items = collect(session($this->sessionName()))
             ->filter(function ($item) {
                 $item = (object) $item;
                 return $item->instance !== $this->instance;
             });
 
-        return !!(session([Cart::sessionName() => $items]));
+        return !!(session([$this->sessionName() => $items]));
     }
 }
