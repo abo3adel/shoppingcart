@@ -4,6 +4,7 @@ namespace Abo3adel\ShoppingCart\Traits\Base;
 
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Events\CartItemUpdated;
 use Abo3adel\ShoppingCart\Exceptions\ItemNotFoundException;
 
 trait UpdatingItemsMethod
@@ -43,8 +44,13 @@ trait UpdatingItemsMethod
                 $opt2,
                 $options
             );
-            
-            return $item->update();
+
+            if ($item->update()) {
+                event(new CartItemUpdated($item));
+                return true;
+            }
+
+            return false;
         }
 
         $items = (collect(session(Cart::sessionName())))
@@ -66,6 +72,7 @@ trait UpdatingItemsMethod
                         $opt2,
                         $options
                     );
+                    event(new CartItemUpdated($item));
                 }
                 return $item;
             });

@@ -3,11 +3,13 @@
 namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\Events\CartItemUpdated;
 use Abo3adel\ShoppingCart\Exceptions\ItemNotFoundException;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 
 class UpdatingCartItemTest extends TestCase
 {
@@ -101,5 +103,23 @@ class UpdatingCartItemTest extends TestCase
         $this->expectException(ItemNotFoundException::class);
 
         Cart::update(63, 5);
+    }
+
+    public function testUpdatingItemWillFireEvent()
+    {
+        Event::fake();
+        $this->testGuestCanUpdateItem();
+        Event::assertDispatched(CartItemUpdated::class, function ($ev) {
+            return $ev->item->qty === 25;
+        });
+    }
+
+    public function testUserUpdateWillFireEvent()
+    {
+        Event::fake();
+        $this->testUserCanUpdateItem();
+        Event::assertDispatched(CartItemUpdated::class, function ($ev) {
+            return $ev->item->qty === 25;
+        });
     }
 }

@@ -6,7 +6,7 @@ use Abo3adel\ShoppingCart\CartItem;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CartItemAdded
+class CartItemUpdated
 {
     use Dispatchable, SerializesModels;
 
@@ -17,8 +17,8 @@ class CartItemAdded
      *
      * @return void
      */
-    public function __construct(CartItem $item)
+    public function __construct(CartItem $cartItem)
     {
-        $this->item = $item;
+        $this->item = $cartItem;
     }
 }
