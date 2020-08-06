@@ -143,4 +143,26 @@ class ShoppingCartCtrl
 
         return !!(session([Cart::sessionName() => $items]));
     }
+
+    /**
+     * delete all items with current instance
+     *
+     * @return boolean
+     */
+    public function destroy(): bool
+    {
+        if (auth()->check()) {
+            return CartItem::whereInstance($this->instance)
+                ->whereUserId(auth()->id())
+                ->delete();
+        }
+
+        $items = collect(session(Cart::sessionName()))
+            ->filter(function ($item) {
+                $item = (object) $item;
+                return $item->instance !== $this->instance;
+            });
+
+        return !!(session([Cart::sessionName() => $items]));
+    }
 }
