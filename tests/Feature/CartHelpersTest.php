@@ -64,6 +64,25 @@ class CartHelpersTest extends TestCase
         $this->testGuestCanCalculateItemTotalPrice();
     }
 
+    public function testGuestCanCalculateTotalQtyOnly()
+    {
+        $this->createItemWithData(1, 9, 5);
+        $this->createItemWithData(4, 25, 70);
+
+        $this->createItemWithData(1, 6.5, 25, 'wish');
+        $this->createItemWithData(3, 14, 120, 'wish');
+
+        $this->assertSame(285, Cart::instance()->totalQty());
+        $this->assertSame(385, Cart::instance('wish')->totalQty());
+    }
+
+    public function testUserCanGetTotalQtyOnly()
+    {
+        $this->signIn();
+
+        $this->testGuestCanCalculateTotalQtyOnly();
+    }
+
     private function createItemWithData(
         int $count = 1,
         float $price,

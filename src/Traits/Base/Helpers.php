@@ -38,6 +38,20 @@ trait Helpers
     }
 
     /**
+     * calculate total qty only
+     *
+     * @return integer
+     */
+    public function totalQty(): int
+    {
+        if (auth()->check()) {
+            return (int) $this->dbSum('qty');
+        }
+
+        return $this->content()->sum('qty');
+    }
+
+    /**
      * sum cloumns in database
      *
      * @param string $exp columns to sum
