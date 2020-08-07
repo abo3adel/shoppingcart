@@ -5,6 +5,7 @@ namespace Abo3adel\ShoppingCart\Tests\Unit;
 use Abo3adel\ShoppingCart\Car;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -51,6 +52,22 @@ class CartItemTest extends TestCase
         $this->assertSame(
             Car::class,
             $item->buyable_type
+        );
+    }
+
+    public function testItHaveBuyableDiscount()
+    {
+        $craft = factory(SpaceCraft::class)->create([
+            'discount' => 66
+        ]);
+        $item = factory(CartItem::class)->create([
+            'buyable_type' => SpaceCraft::class,
+            'buyable_id' => $craft->id
+        ]);
+
+        $this->assertSame(
+            $craft->discount,
+            $item->discount
         );
     }
 }

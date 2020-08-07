@@ -29,6 +29,16 @@ class CartItem extends Model
     }
 
     /**
+     * get buyable discount percentage
+     *
+     * @return integer
+     */
+    public function getDiscountAttribute(): int
+    {
+        return $this->buyable->getDiscount();
+    }
+
+    /**
      * Get the owning buyable model
      *
      * @return MorphTo
