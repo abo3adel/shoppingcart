@@ -75,15 +75,20 @@ class ShoppingCartServiceProvider extends ServiceProvider
 
     public function publishThings()
     {
-        if ($this->app->runningInConsole() && !file_exists(config_path('shoppingcart.php'))) {
-            $this->publishes([
-                __DIR__ . '/../config/shoppingcart.php' => config_path('shoppingcart.php'),
-            ], 'config');
 
+        if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../../database/migrations/create_cart_items_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_cart_items_table.php'),
-                // you can add any number of migrations here
-            ], 'migrations');
+                __DIR__ . '/../config/ShoppingCart.php' => config_path('shoppingcart.php'),
+
+                // publish migrations
+                __DIR__ . '/../database/migrations/2020_08_04_205055_create_cart_items_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_cart_items_table.php'),
+            ], 'shoppingcart-all');
+
+            // $this->publishes([
+            //     __DIR__ . '/../database/migrations/create_cart_items_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_cart_items_table.php'),
+            //     // you can add any number of migrations here
+            // ], 'migrations');
         }
     }
 }
+// php artisan vendor:publish --provider="Abo3adel\ShoppingCar t\ShoppingCartServiceProvider" --tag="migrations"

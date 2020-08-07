@@ -1,6 +1,6 @@
 {
     "name": "abo3adel/shoppingcart",
-    "description": "a simple and highly customized laravel shopping cart",
+    "description": "a simple yet powerful and highly customized laravel shopping cart",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -44,7 +44,7 @@
                 "Abo3adel\\ShoppingCart\\ShoppingCartServiceProvider"
             ],
             "aliases": {
-                "Cart": "Abo3adel\\ShoppingCart\\ShoppingCartFacade"
+                "Cart": "Abo3adel\\ShoppingCart\\Cart"
             }
         }
     }

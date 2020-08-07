@@ -15,7 +15,6 @@ class CreateCartItemsTable extends Migration
     public function up()
     {
         Schema::create('cart_items' . Cart::tbAddon(), function (Blueprint $table) {
-            // TODO change id to be a string type
             $table->unsignedBigInteger('id', true);
             $table->unsignedBigInteger('user_id');
             $table->integer('qty', false, true);
@@ -29,9 +28,7 @@ class CreateCartItemsTable extends Migration
             $table->string('instance')->nullable()->default(
                 Cart::defaultInstance()
             );
-            $table->text('options')->default(
-                json_encode([])
-            )->nullable();
+            $table->text('options')->nullable();
             $table->morphs('buyable');
 
             $table->foreign('user_id')
