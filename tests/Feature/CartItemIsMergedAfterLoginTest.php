@@ -27,9 +27,10 @@ class CartItemIsMergedAfterLoginTest extends TestCase
         $this->assertGreaterThan(7, session(Cart::sessionName()));
         
         // Cart::afterLogin($this->signIn());
-        (new SaveCartItemsIntoDataBase())->handle(
-            new Login('web', $this->signIn(), false)
-        );
+        // (new SaveCartItemsIntoDataBase())->handle(
+        //     new Login('web', $this->signIn(), false)
+        // );
+        auth()->guard()->login($this->signIn());
 
         $this->assertEmpty(session(Cart::sessionName()));
         $this->assertCount(6, Cart::instance()->content());
@@ -44,9 +45,10 @@ class CartItemIsMergedAfterLoginTest extends TestCase
     public function testItWillMergeNewItemsWithOldItems()
     {
         $user = $this->signIn();
-        (new SaveCartItemsIntoDataBase())->handle(
-            new Login('web', $user, false)
-        );
+        // (new SaveCartItemsIntoDataBase())->handle(
+        //     new Login('web', $user, false)
+        // );
+        auth()->guard()->login($user);
 
         $item = $this->createItem(4);
         $wish = $this->createItem(9, [], 'wish');
@@ -62,9 +64,10 @@ class CartItemIsMergedAfterLoginTest extends TestCase
         $this->createItem(3, [], 'wish');
 
         // Cart::afterLogin($this->signIn($user));
-        (new SaveCartItemsIntoDataBase())->handle(
-            new Login('web', $this->signIn($user), false)
-        );
+        // (new SaveCartItemsIntoDataBase())->handle(
+        //     new Login('web', $this->signIn($user), false)
+        // );
+        auth()->guard()->login($this->signIn($user));
 
         $this->assertCount(17, Cart::instance()->content());
         $this->assertCount(14, Cart::instance('wish')->content());
@@ -82,9 +85,10 @@ class CartItemIsMergedAfterLoginTest extends TestCase
     public function testItWillUpdateAlreadySavedItemsIfChanged()
     {
         $user = $this->signIn();
-        (new SaveCartItemsIntoDataBase())->handle(
-            new Login('web', $user, false)
-        );
+        // (new SaveCartItemsIntoDataBase())->handle(
+        //     new Login('web', $user, false)
+        // );
+        auth()->guard()->login($user);
 
         $this->createItem(3);
         $model = factory(SpaceCraft::class)->create();
@@ -100,9 +104,11 @@ class CartItemIsMergedAfterLoginTest extends TestCase
         auth()->guard()->logout();
 
         // login with another user
-        (new SaveCartItemsIntoDataBase())->handle(
-            new Login('web', $this->signIn(), false)
-        );
+        // (new SaveCartItemsIntoDataBase())->handle(
+        //     new Login('web', $this->signIn(), false)
+        // );
+        auth()->guard()->login($this->signIn());
+
         // Cart::afterLogin($this->signIn());
         $this->createItem();
         $this->assertCount(2, Cart::content());
@@ -113,9 +119,10 @@ class CartItemIsMergedAfterLoginTest extends TestCase
         $this->assertCount(1, Cart::instance()->content());
 
         // Cart::afterLogin($this->signIn($user));
-        (new SaveCartItemsIntoDataBase())->handle(
-            new Login('web', $this->signIn($user), false)
-        );
+        // (new SaveCartItemsIntoDataBase())->handle(
+        //     new Login('web', $this->signIn($user), false)
+        // );
+        auth()->guard()->login($this->signIn($user));
 
         $this->assertCount(5, Cart::instance()->content());
         $item = Cart::find($item->id);

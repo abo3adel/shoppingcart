@@ -2,7 +2,12 @@
 
 namespace Abo3adel\ShoppingCart;
 
+use Abo3adel\ShoppingCart\Listeners\SaveCartItemsIntoDataBase;
+use Abo3adel\ShoppingCart\Providers\EventServiceProvider;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +25,11 @@ class ShoppingCartServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/resources/views', 'shopping-cart');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         // $this->registerRoutes();
+
+        Event::listen([
+            Login::class,
+            Registered::class
+        ], SaveCartItemsIntoDataBase::class);
     }
 
     /**
@@ -59,6 +69,8 @@ class ShoppingCartServiceProvider extends ServiceProvider
         $this->app->singleton('shopping-cart', function () {
             return new ShoppingCartCtrl;
         });
+
+        // $this->app->register(EventServiceProvider::class);
     }
 
     public function publishThings()
