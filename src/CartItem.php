@@ -13,6 +13,7 @@ class CartItem extends Model
         'price' => 'float',
         'qty' => 'int',
         'id' => 'int',
+        'buyable_id' => 'int',
         'options' => 'array',
     ];
 

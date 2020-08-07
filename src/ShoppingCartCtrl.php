@@ -10,6 +10,7 @@ use Abo3adel\ShoppingCart\Traits\Base\Helpers;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
 use Abo3adel\ShoppingCart\Traits\Base\UpdatingItemsMethod;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -196,11 +197,17 @@ class ShoppingCartCtrl
         return true;
     }
 
-    public function afterLogin()
+    /**
+     * merge session cart items and save into database
+     *
+     * @param User $user
+     * @return void
+     */
+    public function afterLogin(User $user): void
     {
         $items = collect(session($this->sessionName()));
 
-        $items->each(function ($item) {
+        $items->each(function ($item) use ($user) {
             $item = (object) $item;
             $item = (object) $item;
 
@@ -224,7 +231,7 @@ class ShoppingCartCtrl
 
             $item = CartItem::updateOrCreate([
                 'instance' => $item->instance,
-                'user_id' => auth()->id(),
+                'user_id' => $user->id,
                 'buyable_id' => $item->buyable_id,
                 'buyable_type' => $item->buyable_type,
             ], $toBeUpdated);
