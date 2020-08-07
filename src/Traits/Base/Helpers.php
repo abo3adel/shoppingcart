@@ -98,7 +98,12 @@ trait Helpers
     {
         $item = $this->find($itemId);
 
-        
+        // if $by is greater than buyable qty
+        // then abort updating
+        if ($by > (int) $item->buyable->qty) {
+            return null;
+        }
+
         $item->qty += $by;
         if (auth()->check()) {
             $item->update();
@@ -120,7 +125,12 @@ trait Helpers
     {
         $item = $this->find($itemId);
 
-        
+        // if $by is greater than item qty
+        // then abort updating
+        if ($by > $item->qty) {
+            return null;
+        }
+
         $item->qty -= $by;
         if (auth()->check()) {
             $item->update();

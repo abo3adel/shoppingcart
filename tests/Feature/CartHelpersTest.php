@@ -4,6 +4,7 @@ namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Tests\Model\Car;
 use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -147,6 +148,53 @@ class CartHelpersTest extends TestCase
         $this->testItCanDecrementQty();
     }
 
+    public function testItWillNotIncrementIfNumberIsGreaterThanBuyableQty()
+    {
+        $buyable = factory(Car::class)->create([
+            'qty' => 15
+        ]);
+        $item = Cart::add($buyable, 4);
+
+        $this->assertNull(Cart::increment($item->id, 16));
+
+        if (auth()->check()) {
+            $this->assertDatabaseHas(Cart::tbName(), [
+                'qty' => 4,
+                'buyable_id' => $buyable->id
+            ]);
+        }
+    }
+
+    public function testItWillNotIncrementForUser()
+    {
+        $this->signIn();
+
+        $this->testItWillNotIncrementIfNumberIsGreaterThanBuyableQty();
+    }
+
+    public function testItWillNotDecrementIfNumberIsGreaterThanItemQty()
+    {
+        $buyable = factory(Car::class)->create([
+            'qty' => 15
+        ]);
+        $item = Cart::add($buyable, 4);
+
+        $this->assertNull(Cart::decrement($item->id, 5));
+
+        if (auth()->check()) {
+            $this->assertDatabaseHas(Cart::tbName(), [
+                'qty' => 4,
+                'buyable_id' => $buyable->id
+            ]);
+        }
+    }
+
+    public function testItWillNotDecrementForUser()
+    {
+        $this->signIn();
+        $this->testItWillNotDecrementIfNumberIsGreaterThanItemQty();
+    }
+
 
     private function createItemWithData(
         int $count = 1,
@@ -156,7 +204,7 @@ class CartHelpersTest extends TestCase
     ): CartItem {
         foreach (range(1, $count) as $i) {
             $item = Cart::instance($instance)->add(
-                factory(SpaceCraft::class)->create(['price' => $price]),
+                factory(Car::class)->create(['price' => $price]),
                 $qty
             );
         }
