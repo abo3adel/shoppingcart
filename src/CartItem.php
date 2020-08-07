@@ -60,4 +60,15 @@ class CartItem extends Model
     {
         return Cart::increments($this, $by);
     }
+
+    /**
+     * decrement qty
+     *
+     * @param integer $by
+     * @return self|null
+     */
+    public function decrements(int $by = 1): ?self
+    {
+        return Cart::decrements($this, $by);
+    }
 }

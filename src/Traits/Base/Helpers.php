@@ -123,7 +123,7 @@ trait Helpers
      * @param integer $by
      * @return CartItem
      */
-    public function decrement($itemId, int $by = 1): ?CartItem
+    public function decrements($itemId, int $by = 1): ?CartItem
     {
         $item = is_int($itemId) ? $this->find($itemId) : $itemId;
 

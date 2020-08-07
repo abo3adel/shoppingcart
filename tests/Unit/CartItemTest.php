@@ -81,4 +81,17 @@ class CartItemTest extends TestCase
             $item->qty
         );
     }
+
+    public function testItCanBeDecremented()
+    {
+        $model = factory(Car::class)->create();
+        $item = Cart::add($model, 7);
+
+        $item = $item->decrements(5);
+
+        $this->assertSame(
+            2,
+            $item->qty
+        );
+    }
 }
