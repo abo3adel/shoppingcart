@@ -22,28 +22,30 @@ class AddingItemsToCartTest extends TestCase
     public function testGuestCanAddItemWithMinimalArgs()
     {
         $buyable = factory(SpaceCraft::class)->create([
-            'price' => 553
+            'price' => 553,
+            'discount' => 50
         ]);
 
         $item = Cart::add($buyable, 22);
-        $this->assertSame((float)553, $item->price);
+        $this->assertSame((float)276.5, $item->price);
         $this->assertSame(22, $item->qty);
     }
 
     public function testGuestCanAddItemWithOpt1AndOpt2()
     {
         $buyable = factory(SpaceCraft::class)->create([
-            'price' => 15056
+            'price' => 15056,
+            'discount' => 77,
         ]);
 
         $item = Cart::add($buyable, 38, 6);
-        $this->assertSame((float)15056, $item->price);
+        $this->assertSame((float)3462.88, $item->price);
         $this->assertSame(38, $item->qty);
         $this->assertSame(6, $item->{Cart::fopt()});
         $this->assertNull($item->{Cart::sopt()});
 
         $buyable = factory(SpaceCraft::class)->create([
-            'price' => 15056
+            'price' => 3462.88
         ]);
         $item = Cart::add($buyable, 70, 4, 13);
         $this->assertSame(70, $item->qty);
@@ -115,7 +117,7 @@ class AddingItemsToCartTest extends TestCase
         $this->assertDatabaseHas(
             Cart::tbName(),
             [
-                'price' => 553,
+                'price' => 276.5,
                 'qty' => 22,
                 'buyable_id' => 1,
             ]
@@ -125,7 +127,7 @@ class AddingItemsToCartTest extends TestCase
         $this->assertDatabaseHas(
             Cart::tbName(),
             [
-                'price' => 15056,
+                'price' => 3462.88,
                 'qty' => 70,
                 Cart::fopt() => 4,
                 Cart::sopt() => 13
@@ -202,7 +204,7 @@ class AddingItemsToCartTest extends TestCase
         $this->testGuestCanAddItemWithMinimalArgs();
 
         Event::assertDispatched(CartItemAdded::class, function ($ev) {
-            return $ev->item->price === (float)553;
+            return $ev->item->price === (float)276.5;
         });
 
         $this->signIn();

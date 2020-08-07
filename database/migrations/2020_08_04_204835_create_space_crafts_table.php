@@ -18,6 +18,7 @@ class CreateSpaceCraftsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->float('price');
+            $table->integer('discount')->unsigned()->default(0);
             $table->integer('weight');
             $table->enum('color', ['red', 'green', 'black']);
             $table->timestamps();

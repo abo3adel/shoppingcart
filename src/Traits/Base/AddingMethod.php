@@ -35,9 +35,9 @@ trait AddingMethod
     ): CartItem {
         // check if buyable model have required attributes
         // price, id
-        if (null === $buyable->price || null === $buyable->id) {
+        if (!method_exists($buyable, 'getSubPrice') || null === $buyable->getSubPrice() || null === $buyable->id) {
             throw new InvalidModelException(
-                'model missing required attributes ( price - id )'
+                'model missing required attributes ( getSubPrice() - id )'
             );
         }
 
@@ -46,7 +46,7 @@ trait AddingMethod
             'buyable_id' => $buyable->id,
             'options' => $options,
             'instance' => $this->instance,
-            'price' => $buyable->price,
+            'price' => $buyable->getSubPrice(),
             'qty' => $qty,
         ]);
 
