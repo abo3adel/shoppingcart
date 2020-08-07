@@ -2,9 +2,9 @@
 
 namespace Abo3adel\ShoppingCart\Tests\Unit;
 
-use Abo3adel\ShoppingCart\Car;
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Abo3adel\ShoppingCart\Tests\Model\Car;
 use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -66,6 +66,19 @@ class CartItemTest extends TestCase
         $this->assertSame(
             297.0,
             $item->sub_total
+        );
+    }
+
+    public function testItCanBeIncremented()
+    {
+        $model = factory(Car::class)->create();
+        $item = Cart::add($model, 7);
+
+        $item = $item->increments(5);
+
+        $this->assertSame(
+            12,
+            $item->qty
         );
     }
 }

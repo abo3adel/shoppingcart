@@ -103,7 +103,7 @@ class CartHelpersTest extends TestCase
     public function testIncrementItemQty()
     {
         $item = $this->createItemWithData(3, 25, 10);
-        Cart::increment($item->id, 5);
+        Cart::increments($item->id, 5);
 
         $this->assertSame(
             15,
@@ -127,7 +127,7 @@ class CartHelpersTest extends TestCase
     public function testItCanDecrementQty()
     {
         $item = $this->createItemWithData(3, 25, 10);
-        Cart::decrement($item->id, 4);
+        Cart::decrements($item->id, 4);
 
         $this->assertSame(
             6,
@@ -155,7 +155,7 @@ class CartHelpersTest extends TestCase
         ]);
         $item = Cart::add($buyable, 4);
 
-        $this->assertNull(Cart::increment($item->id, 16));
+        $this->assertNull(Cart::increments($item->id, 16));
 
         if (auth()->check()) {
             $this->assertDatabaseHas(Cart::tbName(), [
@@ -179,7 +179,7 @@ class CartHelpersTest extends TestCase
         ]);
         $item = Cart::add($buyable, 4);
 
-        $this->assertNull(Cart::decrement($item->id, 5));
+        $this->assertNull(Cart::decrements($item->id, 5));
 
         if (auth()->check()) {
             $this->assertDatabaseHas(Cart::tbName(), [

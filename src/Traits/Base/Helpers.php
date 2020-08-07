@@ -90,13 +90,15 @@ trait Helpers
     /**
      * increment item qty by provided number
      *
-     * @param integer $itemId
+     * @param integer|CartItem $itemId
      * @param integer $by
      * @return CartItem
      */
-    public function increment(int $itemId, int $by = 1): ?CartItem
+    public function increments($itemId, int $by = 1): ?CartItem
     {
-        $item = $this->find($itemId);
+        $item = ($itemId instanceof CartItem) ?
+            $itemId :
+            $this->find($itemId);
 
         // if $by is greater than buyable qty
         // then abort updating
@@ -117,13 +119,13 @@ trait Helpers
     /**
      * decrement item qty by provieded number
      *
-     * @param integer $itemId
+     * @param integer|CartItem $itemId
      * @param integer $by
      * @return CartItem
      */
-    public function decrement(int $itemId, int $by = 1): ?CartItem
+    public function decrement($itemId, int $by = 1): ?CartItem
     {
-        $item = $this->find($itemId);
+        $item = is_int($itemId) ? $this->find($itemId) : $itemId;
 
         // if $by is greater than item qty
         // then abort updating

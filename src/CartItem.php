@@ -49,4 +49,15 @@ class CartItem extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * increment qty
+     *
+     * @param integer $by
+     * @return self|null
+     */
+    public function increments(int $by = 1): ?self
+    {
+        return Cart::increments($this, $by);
+    }
 }
