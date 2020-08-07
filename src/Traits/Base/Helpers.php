@@ -51,10 +51,15 @@ trait Helpers
         return $this->content()->sum('qty');
     }
 
+    /**
+     * calculate sub total price after tax
+     *
+     * @return float
+     */
     public function subTotal(): float
     {
         $total = $this->total();
-        dd($this->tax / 100);
+
         return $total - ($total * ($this->tax / 100));
     }
 

@@ -8,6 +8,7 @@ use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Config;
 
 class CartHelpersTest extends TestCase
 {
@@ -16,26 +17,26 @@ class CartHelpersTest extends TestCase
     public function testGuestCanCalculateItemsTotal()
     {
         Cart::instance()->add(
-            factory(SpaceCraft::class)->create(['price' => 3]),
+            factory(SpaceCraft::class)->create(['price' => 260]),
             5
         );
         Cart::instance()->add(
-            factory(SpaceCraft::class)->create(['price' => 4]),
-            3
-        );
-
-        Cart::instance('wish')->add(
-            factory(SpaceCraft::class)->create(['price' => 4]),
+            factory(SpaceCraft::class)->create(['price' => 190]),
             7
         );
 
         Cart::instance('wish')->add(
-            factory(SpaceCraft::class)->create(['price' => 3]),
-            2
+            factory(SpaceCraft::class)->create(['price' => 340]),
+            3
         );
 
-        $this->assertSame((float)27, Cart::instance()->total());
-        $this->assertSame((float)34, Cart::instance('wish')->total());
+        Cart::instance('wish')->add(
+            factory(SpaceCraft::class)->create(['price' => 70]),
+            25
+        );
+
+        $this->assertSame((float)2630, Cart::instance()->total());
+        $this->assertSame((float)2770, Cart::instance('wish')->total());
     }
 
     public function testUserCanGetItemTotal()
@@ -81,6 +82,21 @@ class CartHelpersTest extends TestCase
         $this->signIn();
 
         $this->testGuestCanCalculateTotalQtyOnly();
+    }
+
+    public function testGuestCanCalculateCartTotalAfterTax()
+    {
+        Cart::setTax(25);
+        
+        // total (default) => 2630
+        // total (wish) => 2770
+        $this->testGuestCanCalculateItemsTotal();
+
+        $this->assertSame(1972.5, Cart::instance()->subTotal());
+        $this->assertSame(
+            2077.5,
+            Cart::instance('wish')->subTotal()
+        );
     }
 
     private function createItemWithData(
