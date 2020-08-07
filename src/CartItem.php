@@ -16,6 +16,12 @@ class CartItem extends Model
         'options' => 'array',
     ];
 
+    protected $with = ['buyable'];
+
+    protected $appends = [
+        'sub_total',
+    ];
+
     public function __construct(array $attrs = [])
     {
         parent::__construct($attrs);
@@ -28,14 +34,9 @@ class CartItem extends Model
         ];
     }
 
-    /**
-     * get buyable discount percentage
-     *
-     * @return integer
-     */
-    public function getDiscountAttribute(): int
+    public function getSubTotalAttribute(): float
     {
-        return $this->buyable->getDiscount();
+        return round($this->price * $this->qty, 2);
     }
 
     /**

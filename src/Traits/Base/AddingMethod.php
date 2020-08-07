@@ -37,7 +37,7 @@ trait AddingMethod
         // price, id
         if (!method_exists($buyable, 'getSubPrice') || null === $buyable->getSubPrice() || null === $buyable->id) {
             throw new InvalidModelException(
-                'model missing required attributes ( getSubPrice() - id )'
+                'model missing required attributes|methods ( getSubPrice() - id )'
             );
         }
 
@@ -76,9 +76,14 @@ trait AddingMethod
 
         // check if user is logged in THEN save into database
         if (auth()->check()) {
+            // remove run time appends
+            $itemArray = $item->toArray();
+            unset($itemArray['sub_total']);
+            unset($itemArray['discount']);
+
             $item = CartItem::create([
                 'user_id' => auth()->id(),
-            ] + $item->toArray());
+            ] + $itemArray);
 
             event(new CartItemAdded($item));
 
@@ -89,9 +94,7 @@ trait AddingMethod
         $item->id = $this->generateId();
 
         session([
-            Cart::sessionName() => (
-                collect(session(Cart::sessionName()))->push($item)
-            )->toArray()
+            Cart::sessionName() => (collect(session(Cart::sessionName()))->push($item))->toArray()
         ]);
 
         event(new CartItemAdded($item));

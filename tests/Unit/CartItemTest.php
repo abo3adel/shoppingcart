@@ -55,19 +55,17 @@ class CartItemTest extends TestCase
         );
     }
 
-    public function testItHaveBuyableDiscount()
+    public function testItHaveSubTotal()
     {
         $craft = factory(SpaceCraft::class)->create([
-            'discount' => 66
+            'discount' => 50.5,
+            'price' => 120,
         ]);
-        $item = factory(CartItem::class)->create([
-            'buyable_type' => SpaceCraft::class,
-            'buyable_id' => $craft->id
-        ]);
+        $item = Cart::add($craft, 5);
 
         $this->assertSame(
-            $craft->discount,
-            $item->discount
+            297.0,
+            $item->sub_total
         );
     }
 }
