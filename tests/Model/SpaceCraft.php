@@ -10,6 +10,8 @@ class SpaceCraft extends Model implements CanBeBought
 {
     use Buyable;
 
+    protected $guarded = [];
+
     public function getPrice(): float
     {
         return $this->price;

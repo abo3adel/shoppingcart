@@ -224,7 +224,7 @@ class ShoppingCartCtrl
             if ($opt1) {
                 $toBeUpdated += [$opt1 => $item->{$opt1}];
             }
-            
+
             if ($opt2) {
                 $toBeUpdated += [$opt2 => $item->{$opt2}];
             }
@@ -238,5 +238,80 @@ class ShoppingCartCtrl
         });
 
         session([$this->sessionName() => []]);
+    }
+
+    /**
+     * remove items with outofstock buyable objets
+     * and lower items qty if exceeded buyable qty
+     *
+     * @return array
+     */
+    public function checkBuyableStockAmount(): array
+    {
+        $items = $this->content();
+
+        // will hold deleted items after 
+        // thier buyable object is out of stock
+        $outOfStockErrors = [];
+
+        // will hold items that it`s qty exceeded their
+        // buyable qty and updated values from & to
+        $buyableAmountErrors = [];
+
+        // the updated cart items after deleteing or lowering qty
+        $updatedItems = [];
+
+        // check if user is loggedIn
+        $loggedIn = auth()->check();
+
+        foreach ($items as $item) {
+            if (!$loggedIn) {
+                $item->load('buyable');
+            }
+            $buyableQty = $item->buyable->qty;
+
+            // check if item qty exceeded buyable stock
+            if ($item->qty > $buyableQty) {
+                // if buyable is out of stock
+                if ($buyableQty < 1) {
+                    if ($loggedIn) {
+                        // delete item from db
+                        CartItem::destroy($item->id);
+                    }
+
+                    $outOfStockErrors[] = $item;
+
+                    // do not add item to updated items list
+                    continue;
+                }
+
+                $diffrenece = $item->qty - $buyableQty;
+                $currentItemQty = $item->qty;
+                // set item qty to diffrenece if it lower than
+                // product qty otherwise to 1
+                $item->qty = $diffrenece <= $buyableQty
+                    ? $diffrenece
+                    : 1;
+
+                if ($loggedIn) {
+                    // update item in database
+                    // $this->update($item->id, $item->qty);
+                    $item->update();
+                }
+
+                $buyableAmountErrors[] = (object) [
+                    'from' => $currentItemQty,
+                    'to' => $item->qty,
+                    'item' => $item
+                ];
+            }
+            $updatedItems[] = $item;
+        }
+
+        if (!$loggedIn) {
+            session([$this->sessionName() => $updatedItems]);
+        }
+
+        return [$outOfStockErrors, $buyableAmountErrors];
     }
 }
