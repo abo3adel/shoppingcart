@@ -15,6 +15,7 @@ class CreateCartItemsTable extends Migration
     public function up()
     {
         Schema::create('cart_items' . Cart::tbAddon(), function (Blueprint $table) {
+            // TODO change id to be a string type
             $table->unsignedBigInteger('id', true);
             $table->unsignedBigInteger('user_id');
             $table->integer('qty', false, true);

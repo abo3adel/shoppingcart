@@ -195,4 +195,41 @@ class ShoppingCartCtrl
         session([$this->sessionName() => $items]);
         return true;
     }
+
+    public function afterLogin()
+    {
+        $items = collect(session($this->sessionName()));
+
+        $items->each(function ($item) {
+            $item = (object) $item;
+            $item = (object) $item;
+
+            $toBeUpdated = [
+                'qty' => $item->qty,
+                'price' => $item->price,
+                'options' => $item->options,
+                // 'instance' => $this->instance
+            ];
+
+            $opt1 = Cart::fopt();
+            $opt2 = Cart::sopt();
+
+            if ($opt1) {
+                $toBeUpdated += [$opt1 => $item->{$opt1}];
+            }
+            
+            if ($opt2) {
+                $toBeUpdated += [$opt2 => $item->{$opt2}];
+            }
+
+            $item = CartItem::updateOrCreate([
+                'instance' => $item->instance,
+                'user_id' => auth()->id(),
+                'buyable_id' => $item->buyable_id,
+                'buyable_type' => $item->buyable_type,
+            ], $toBeUpdated);
+        });
+
+        session([$this->sessionName() => []]);
+    }
 }
