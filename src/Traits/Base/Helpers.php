@@ -87,10 +87,41 @@ trait Helpers
         return $this->tax;
     }
 
-    public function increment(int $itemId, int $by = 1): CartItem
+    /**
+     * increment item qty by provided number
+     *
+     * @param integer $itemId
+     * @param integer $by
+     * @return CartItem
+     */
+    public function increment(int $itemId, int $by = 1): ?CartItem
     {
         $item = $this->find($itemId);
+
+        
         $item->qty += $by;
+        if (auth()->check()) {
+            $item->update();
+        } else {
+            $this->update($item->id, $item->qty);
+        }
+
+        return $item;
+    }
+
+    /**
+     * decrement item qty by provieded number
+     *
+     * @param integer $itemId
+     * @param integer $by
+     * @return CartItem
+     */
+    public function decrement(int $itemId, int $by = 1): ?CartItem
+    {
+        $item = $this->find($itemId);
+
+        
+        $item->qty -= $by;
         if (auth()->check()) {
             $item->update();
         } else {

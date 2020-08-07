@@ -123,6 +123,31 @@ class CartHelpersTest extends TestCase
         $this->testIncrementItemQty();
     }
 
+    public function testItCanDecrementQty()
+    {
+        $item = $this->createItemWithData(3, 25, 10);
+        Cart::decrement($item->id, 4);
+
+        $this->assertSame(
+            6,
+            Cart::find($item->id)->qty
+        );
+
+        if (auth()->check()) {
+            $this->assertDatabaseHas(Cart::tbName(), [
+                'qty' => 6,
+                'price' => 25
+            ]);
+        }
+    }
+
+    public function testUserCanDecrementQty()
+    {
+        $this->signIn();
+        $this->testItCanDecrementQty();
+    }
+
+
     private function createItemWithData(
         int $count = 1,
         float $price,
