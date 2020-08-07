@@ -21,6 +21,9 @@
         "fzaninotto/faker": "^1.9@dev"
     },
     "autoload": {
+        "files": [
+            "src/cart_helper.php"
+        ],
         "psr-4": {
             "Abo3adel\\ShoppingCart\\": "src/"
         }
