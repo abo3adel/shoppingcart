@@ -3,9 +3,11 @@
 namespace Abo3adel\ShoppingCart\Tests\Feature;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\Events\CartInstanceDestroyed;
 use Abo3adel\ShoppingCart\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 
 class DestroingCartInstanceTest extends TestCase
 {
@@ -60,5 +62,28 @@ class DestroingCartInstanceTest extends TestCase
             'user_id' => $user->id,
             'instance' => 'wish'
         ]);
+    }
+
+    public function testDestroyingInstanceWillfireEvent()
+    {
+        Event::fake();
+
+        $this->createItem(8, [], 'wish');
+
+        Cart::instance('wish')->destroy();
+
+        Event::assertDispatched(
+            CartInstanceDestroyed::class,
+            function ($ev) {
+                return $ev->instance === 'wish';
+            }
+        );
+    }
+
+    public function testUserDestroyingInstanceWillFireEvent()
+    {
+        $this->signIn();
+
+        $this->testDestroyingInstanceWillfireEvent();
     }
 }
