@@ -27,4 +27,16 @@ class BuyableTest extends TestCase
 
         $this->assertCount(2, $spc->items);
     }
+
+    public function testItCanBeAddedToCart()
+    {
+        $buyable = factory(SpaceCraft::class)->create();
+        $item = $buyable->addToCart(25);
+
+        $this->assertSame(
+            $buyable->id,
+            $item->buyable_id
+        );
+        $this->assertSame(25, $item->qty);
+    }
 }
