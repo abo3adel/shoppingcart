@@ -9,10 +9,8 @@ use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
 use Abo3adel\ShoppingCart\Traits\Base\Helpers;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
 use Abo3adel\ShoppingCart\Traits\Base\UpdatingItemsMethod;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class ShoppingCartCtrl
 {
@@ -168,7 +166,8 @@ class ShoppingCartCtrl
                 return $item;
             });
 
-        return !!(session([$this->sessionName() => $items]));
+        session([$this->sessionName() => $items]);
+        return true;
     }
 
     /**

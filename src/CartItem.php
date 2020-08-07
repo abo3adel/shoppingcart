@@ -58,7 +58,7 @@ class CartItem extends Model
      */
     public function increments(int $by = 1): ?self
     {
-        return Cart::increments($this, $by);
+        return Cart::instance()->increments($this, $by);
     }
 
     /**
@@ -69,6 +69,6 @@ class CartItem extends Model
      */
     public function decrements(int $by = 1): ?self
     {
-        return Cart::decrements($this, $by);
+        return Cart::instance()->decrements($this, $by);
     }
 }

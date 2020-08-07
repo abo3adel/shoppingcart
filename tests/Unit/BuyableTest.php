@@ -2,6 +2,7 @@
 
 namespace Abo3adel\ShoppingCart\Tests\Unit;
 
+use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\Tests\Model\Car;
 use Abo3adel\ShoppingCart\CartItem;
 use Abo3adel\ShoppingCart\Tests\Model\SpaceCraft;
@@ -38,5 +39,15 @@ class BuyableTest extends TestCase
             $item->buyable_id
         );
         $this->assertSame(25, $item->qty);
+    }
+
+    public function testItCanDeleteItself()
+    {
+        $buyable = factory(SpaceCraft::class)->create();
+        $item = $buyable->addToCart(25);
+        $this->assertTrue(Cart::has($item->id));
+
+        $buyable->removeFromCart();
+        $this->assertFalse(Cart::has($item->id));
     }
 }

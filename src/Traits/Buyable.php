@@ -45,6 +45,19 @@ trait Buyable
         $options = []
     ): CartItem
     {
-        return Cart::add($this, $qty, $opt1, $opt2, $options);
+        return Cart::instance()
+            ->add($this, $qty, $opt1, $opt2, $options);
+    }
+
+    /**
+     * remove current object item from cart
+     *
+     * @return boolean
+     */
+    public function removeFromCart(): bool
+    {
+        return Cart::instance()->delete(
+            (Cart::find($this->id, self::class))->id
+        );
     }
 }
