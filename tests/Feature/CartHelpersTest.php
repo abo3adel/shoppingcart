@@ -87,7 +87,7 @@ class CartHelpersTest extends TestCase
     public function testGuestCanCalculateCartTotalAfterTax()
     {
         Cart::setTax(25);
-        
+
         // total (default) => 2630
         // total (wish) => 2770
         $this->testGuestCanCalculateItemsTotal();
@@ -97,6 +97,30 @@ class CartHelpersTest extends TestCase
             2077.5,
             Cart::instance('wish')->subTotal()
         );
+    }
+
+    public function testIncrementItemQty()
+    {
+        $item = $this->createItemWithData(3, 25, 10);
+        Cart::increment($item->id, 5);
+
+        $this->assertSame(
+            15,
+            Cart::find($item->id)->qty
+        );
+
+        if (auth()->check()) {
+            $this->assertDatabaseHas(Cart::tbName(), [
+                'qty' => 15,
+                'price' => 25
+            ]);
+        }
+    }
+
+    public function testUserCanIncrementQty()
+    {
+        $this->signIn();
+        $this->testIncrementItemQty();
     }
 
     private function createItemWithData(

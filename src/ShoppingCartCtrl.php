@@ -23,6 +23,11 @@ class ShoppingCartCtrl
         UpdatingItemsMethod,
         Helpers;
 
+    /**
+     * tax percentage
+     *
+     * @var int
+     */
     private $tax;
 
     public function __construct()

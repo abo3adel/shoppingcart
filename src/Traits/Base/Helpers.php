@@ -3,6 +3,7 @@
 namespace Abo3adel\ShoppingCart\Traits\Base;
 
 use Abo3adel\ShoppingCart\Cart;
+use Abo3adel\ShoppingCart\CartItem;
 use Illuminate\Support\Facades\DB;
 
 trait Helpers
@@ -84,6 +85,19 @@ trait Helpers
     public function getTax(): int
     {
         return $this->tax;
+    }
+
+    public function increment(int $itemId, int $by = 1): CartItem
+    {
+        $item = $this->find($itemId);
+        $item->qty += $by;
+        if (auth()->check()) {
+            $item->update();
+        } else {
+            $this->update($item->id, $item->qty);
+        }
+
+        return $item;
     }
 
     /**
