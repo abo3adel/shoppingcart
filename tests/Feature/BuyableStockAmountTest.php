@@ -85,4 +85,25 @@ class BuyableStockAmountTest extends TestCase
         $this->signIn();
         $this->testItWillUpdateAmountIfExceededBuyableQty();
     }
+
+    public function testItWillUpdateBuyableObject()
+    {
+        $this->createItem(6);
+        $this->createItem(4, [], 'wish');
+        $buyable = factory(SpaceCraft::class)->create([
+            'price' => 553
+        ]);
+        $item = Cart::instance()->add($buyable, 23);
+        $item->load('buyable');
+        
+        $buyable->update(['price' => 432]);
+        $this->assertSame(553, (int)$item->buyable->price);
+
+        Cart::refreshItemsBuyableObjects();
+        $item = Cart::find($item->id);
+        $this->assertSame(432.0, (float) $item->buyable->price);
+        
+        $this->assertCount(5, Cart::instance('wish')->content());
+        $this->assertCount(8, Cart::instance()->content());
+    }
 }

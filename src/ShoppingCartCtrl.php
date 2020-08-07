@@ -314,4 +314,29 @@ class ShoppingCartCtrl
 
         return [$outOfStockErrors, $buyableAmountErrors];
     }
+
+    /**
+     * refresh item buyable object
+     *
+     * @return void
+     */
+    public function refreshItemsBuyableObjects(): void
+    {
+        if (auth()->check()) {
+            return;
+        }
+
+        $items = collect(session($this->sessionName()))->map(
+            function ($item) {
+                $item = is_array($item) ?
+                    new CartItem($item) :
+                    $item;
+
+                $item->load('buyable');
+                return $item;
+            }
+        );
+
+        session([$this->sessionName() => $items]);
+    }
 }
