@@ -86,6 +86,16 @@ trait GetConfigKeysTrait
         return (new CartItem())->getTable();
     }
 
+    /**
+     * get user configured tax percentage
+     *
+     * @return integer
+     */
+    public function getDefaultTax(): int
+    {
+        return (int) $this->config('tax') ?? 0;
+    }
+
     private function config(string $key): ?string
     {
         return config('shoppingcart.'. $key, null);

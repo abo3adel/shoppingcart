@@ -21,6 +21,8 @@ class ShoppingCartCtrl
         UpdatingItemsMethod,
         Helpers;
 
+    private $tax;
+
     public function __construct()
     {
         $this->instance = $this->instance ?? $this->config('defaultInstance');
@@ -28,6 +30,8 @@ class ShoppingCartCtrl
         if (!session()->has($this->sessionName())) {
             session()->put($this->sessionName(), []);
         }
+
+        $this->tax = $this->getDefaultTax();
     }
 
     /**

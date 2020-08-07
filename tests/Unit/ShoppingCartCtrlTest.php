@@ -49,4 +49,11 @@ class ShoppingCartCtrlTest extends TestCase
 
         $this->assertSame((float)250, $item->price);
     }
+
+    public function testItCanChangeTaxAtRunTime()
+    {
+        Cart::setTax(50);
+
+        $this->assertSame(50, Cart::getTax());
+    }
 }

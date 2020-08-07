@@ -51,6 +51,36 @@ trait Helpers
         return $this->content()->sum('qty');
     }
 
+    public function subTotal(): float
+    {
+        $total = $this->total();
+        dd($this->tax / 100);
+        return $total - ($total * ($this->tax / 100));
+    }
+
+    /**
+     * set cart tax for this instance only
+     *
+     * @param integer|null $val
+     * @return int|self
+     */
+    public function setTax(?int $val = 0): self
+    {
+        $this->tax = $val;
+
+        return $this;
+    }
+
+    /**
+     * get cart tax
+     *
+     * @return integer
+     */
+    public function getTax(): int
+    {
+        return $this->tax;
+    }
+
     /**
      * sum cloumns in database
      *

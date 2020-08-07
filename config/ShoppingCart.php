@@ -4,6 +4,9 @@ return [
     // default cart instance
     "defaultInstance" => 'default',
 
+    // tax percentage
+    "tax" => 0,
+
     // default shopping cart session name
     'session_name' => 'shoppingcart_session',
 
