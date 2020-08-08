@@ -38,6 +38,12 @@ class CartHelpersTest extends TestCase
 
         $this->assertSame((float)2630, Cart::instance()->total());
         $this->assertSame((float)2770, Cart::instance('wish')->total());
+
+        // it will format
+        $this->assertSame(
+            \number_format(2630, 2),
+            Cart::instance()->total(true)
+        );
     }
 
     public function testUserCanGetItemTotal()
@@ -97,6 +103,12 @@ class CartHelpersTest extends TestCase
         $this->assertSame(
             2077.5,
             Cart::instance('wish')->subTotal()
+        );
+
+        // it will format
+        $this->assertSame(
+            \number_format(1972.5, 2),
+            Cart::instance()->subTotal(true)
         );
     }
 

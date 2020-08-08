@@ -11,17 +11,47 @@ trait Helpers
     /**
      * calculate cart item total (price & qty)
      *
-     * @return float
+     * @param boolean $formated
+     * @param int $decimals
+     * @param string $dec_point
+     * @param string $thousands_sep 
+     * @return float|string
      */
-    public function total(): float
-    {
+    public function total(
+        bool $formated = false,
+        int $decimals = 2,
+        string $dec_point = '.',
+        string $thousands_sep = ','
+    ) {
         if (auth()->check()) {
-            return $this->dbSum('price * qty');
+            $sum = $this->dbSum('price * qty');
+
+            if ($formated) {
+                return $this->formatNumber(
+                    $sum,
+                    $decimals,
+                    $dec_point,
+                    $thousands_sep
+                );
+            }
+
+            return $sum;
         }
 
-        return $this->content()->sum(function ($item) {
-            return round($item->price * $item->qty, 2);
+        $sum = $this->content()->sum(function ($item) {
+            return $item->price * $item->qty;
         });
+
+        if ($formated) {
+            return $this->formatNumber(
+                $sum,
+                $decimals,
+                $dec_point,
+                $thousands_sep
+            );
+        }
+
+        return round($sum, 2);
     }
 
     /**
@@ -55,13 +85,31 @@ trait Helpers
     /**
      * calculate sub total price after tax
      *
-     * @return float
+     * @param boolean $formated
+     * @param int $decimals
+     * @param string $dec_point
+     * @param string $thousands_sep 
+     * @return float|string
      */
-    public function subTotal(): float
-    {
+    public function subTotal(
+        bool $formated = false,
+        int $decimals = 2,
+        string $dec_point = '.',
+        string $thousands_sep = ','
+    ) {
         $total = $this->total();
+        $total -= ($total * ($this->tax / 100));
 
-        return $total - ($total * ($this->tax / 100));
+        if ($formated) {
+            return $this->formatNumber(
+                $total,
+                $decimals,
+                $dec_point,
+                $thousands_sep
+            );
+        }
+
+        return round($total, 2);
     }
 
     /**
@@ -159,5 +207,23 @@ trait Helpers
                 ->first()->total,
             2
         );
+    }
+
+    /**
+     * format price
+     * 
+     * @param boolean $formated
+     * @param int $decimals
+     * @param string $dec_point
+     * @param string $thousands_sep 
+     * @return string
+     */
+    private function formatNumber(
+        $number,
+        int $decimals = 2,
+        string $dec_point = '.',
+        string $thousands_sep = ','
+    ): string {
+        return \number_format($number, $decimals, $dec_point, $thousands_sep);
     }
 }
