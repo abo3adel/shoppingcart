@@ -2,8 +2,10 @@
 
 namespace Abo3adel\ShoppingCart;
 
+use Abo3adel\ShoppingCart\Console\Commands\RemoveOldItemsCommand;
 use Abo3adel\ShoppingCart\Listeners\SaveCartItemsIntoDataBase;
 use Abo3adel\ShoppingCart\Providers\EventServiceProvider;
+use Abo3adel\ShoppingCart\Tests\Feature\RemovingOldItemsTest;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Config;
@@ -30,6 +32,14 @@ class ShoppingCartServiceProvider extends ServiceProvider
             Login::class,
             Registered::class
         ], SaveCartItemsIntoDataBase::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->publishThings();
+
+            $this->commands([
+                RemoveOldItemsCommand::class,
+            ]);
+        }
     }
 
     /**
@@ -75,7 +85,6 @@ class ShoppingCartServiceProvider extends ServiceProvider
 
     public function publishThings()
     {
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/ShoppingCart.php' => config_path('shoppingcart.php'),

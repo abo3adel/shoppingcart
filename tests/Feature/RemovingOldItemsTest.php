@@ -9,6 +9,7 @@ use Abo3adel\ShoppingCart\Tests\TestCase;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
 
 class RemovingOldItemsTest extends TestCase
 {
@@ -38,6 +39,33 @@ class RemovingOldItemsTest extends TestCase
         $deleted = Cart::removeOldCartItems(15);
 
         $this->assertSame(7, $deleted);
+        $this->assertCount(10, Cart::instance()->content());
+        $this->assertCount(15, Cart::instance('wish')->content());
+    }
+
+    public function testCommandWillWork()
+    {
+        $this->signIn();
+
+        $before15Days = Carbon::now()->subDays(16);
+
+        $this->createItem(9);
+        $this->createItem(14, [], 'wish');
+        foreach (range(0, 6) as $i) {
+            $model = factory(SpaceCraft::class)->create();
+            $item = factory(CartItem::class)->create([
+                'buyable_id' => $model->id,
+                'buyable_type' => SpaceCraft::class,
+                'user_id' => auth()->id(),
+                'updated_at' => $before15Days,
+            ]);
+        }
+
+        $this->assertCount(17, Cart::instance()->content());
+        $this->assertCount(15, Cart::instance('wish')->content());
+
+        Artisan::call('shoppingcart:destroy');
+
         $this->assertCount(10, Cart::instance()->content());
         $this->assertCount(15, Cart::instance('wish')->content());
     }
