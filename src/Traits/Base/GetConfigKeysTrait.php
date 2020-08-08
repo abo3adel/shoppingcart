@@ -33,7 +33,7 @@ trait GetConfigKeysTrait
      */
     public function tbAddon(): string
     {
-        return $this->config('addon');
+        return $this->config('prefix');
     }
 
     /**
