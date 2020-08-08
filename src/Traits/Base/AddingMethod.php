@@ -75,14 +75,14 @@ trait AddingMethod
         }
 
         // check if user is logged in THEN save into database
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             // remove run time appends
             $itemArray = $item->toArray();
             unset($itemArray['sub_total']);
             unset($itemArray['discount']);
 
             $item = CartItem::create([
-                'user_id' => auth()->id(),
+                'user_id' => $this->user->id,
             ] + $itemArray);
 
             event(new CartItemAdded($item));
@@ -109,7 +109,7 @@ trait AddingMethod
      */
     private function generateId(): int
     {
-        $id = random_int(1, 999999999);
+        $id = random_int(1, 9999999999);
 
         if ($this->has($id)) {
             $id = $this->generateId();

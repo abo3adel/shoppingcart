@@ -102,6 +102,7 @@ class CartItemIsMergedAfterLoginTest extends TestCase
         $this->assertCount(5, Cart::instance()->content());
 
         auth()->guard()->logout();
+        Cart::resetUser();
 
         // login with another user
         // (new SaveCartItemsIntoDataBase())->handle(
@@ -113,6 +114,7 @@ class CartItemIsMergedAfterLoginTest extends TestCase
         $this->createItem();
         $this->assertCount(2, Cart::content());
         auth()->guard()->logout();
+        Cart::resetUser();
 
         $this->createItem(5, [], 'wish');
         Cart::instance()->add($model, 50, 30, 15, $item->options);

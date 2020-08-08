@@ -20,6 +20,7 @@ class SaveCartItemsIntoDataBase
      */
     public function handle($event)
     {
+        Cart::resetUser();
         Cart::afterLogin($event->user);
     }
 }

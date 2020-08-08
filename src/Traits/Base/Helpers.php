@@ -206,6 +206,16 @@ trait Helpers
     }
 
     /**
+     * reset current user object
+     *
+     * @return void
+     */
+    public function resetUser(): void
+    {
+        $this->user = null;
+    }
+
+    /**
      * sum cloumns in database
      *
      * @param string $exp columns to sum

@@ -35,7 +35,7 @@ trait UpdatingItemsMethod
             throw new ItemNotFoundException();
         }
 
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             $item = $this->find($itemId);
             $item = $this->attachValusToItems(
                 $item,

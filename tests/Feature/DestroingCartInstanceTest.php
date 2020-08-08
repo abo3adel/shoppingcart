@@ -49,12 +49,14 @@ class DestroingCartInstanceTest extends TestCase
         $user = $this->signIn();
         $this->createItem(3);
         $this->createItem(6, [], 'wish');
+        Cart::resetUser();
 
         // signIn with another user
         $anotherUser = $this->signIn();
         $this->createItem(5);
         $this->createItem(4, [], 'wish');
         Cart::instance('wish')->destroy();
+        Cart::resetUser();
 
         // signIn again with original user
         $user = $this->signIn($user);

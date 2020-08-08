@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 
 class ShoppingCartCtrl
 {
-
     use InstanceTrait,
         GetConfigKeysTrait,
         AddingMethod,
@@ -35,14 +34,11 @@ class ShoppingCartCtrl
      *
      * @var User
      */
-    private $user;
+    private $user = null;
 
     public function __construct()
     {
         $this->instance = $this->instance ?? $this->config('defaultInstance');
-
-        // reset user
-        $this->user = null;
 
         if (!session()->has($this->sessionName())) {
             session()->put($this->sessionName(), []);
@@ -383,6 +379,8 @@ class ShoppingCartCtrl
      */
     private function checkAuth(): bool
     {
+        if ($this->user) return true;
+
         $guard = Cart::getDefaultGuard();
 
         if (auth($guard)->check()) {
