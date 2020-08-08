@@ -96,6 +96,16 @@ trait GetConfigKeysTrait
         return (int) $this->config('tax') ?? 0;
     }
 
+    /**
+     * get the number of days to delete items older than it
+     *
+     * @return integer
+     */
+    public function getDeletePeriod(): int
+    {
+        return (int) $this->config('deleteAfter');
+    }
+
     private function config(string $key): ?string
     {
         return config('shoppingcart.'. $key, null);

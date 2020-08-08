@@ -18,9 +18,15 @@ return [
     "opt1" => "size",
     "opt2" => "color",
 
-    // casts
+    // casts for optinal columns
     'casts' => [
         'opt1' => 'int',
         'opt2' => 'int'
     ],
+
+    // database only
+    // this allows to delete items older than configured period
+    // in days
+    // * you must shedule the RemoveOldItemsCommand
+    'deleteAfter' => 15  
 ];

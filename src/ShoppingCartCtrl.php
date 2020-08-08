@@ -9,8 +9,10 @@ use Abo3adel\ShoppingCart\Traits\Base\GetConfigKeysTrait;
 use Abo3adel\ShoppingCart\Traits\Base\Helpers;
 use Abo3adel\ShoppingCart\Traits\Base\InstanceTrait;
 use Abo3adel\ShoppingCart\Traits\Base\UpdatingItemsMethod;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ShoppingCartCtrl
 {
@@ -342,5 +344,25 @@ class ShoppingCartCtrl
         );
 
         session([$this->sessionName() => $items]);
+    }
+
+    /**
+     * remove older cart items than configured deleteAfter value
+     *
+     * @param integer $period count of deleted rows
+     * @return integer
+     */
+    public function removeOldCartItems(int $period): int
+    {
+        if (!$period) return 0;
+
+        $affected = DB::table(Cart::tbName())
+            ->where(
+                'updated_at',
+                '<',
+                Carbon::now()->subDays($period)
+            )->delete();
+
+        return $affected;
     }
 }
