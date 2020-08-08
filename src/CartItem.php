@@ -29,10 +29,16 @@ class CartItem extends Model
 
         $this->table = 'cart_items' . Cart::tbAddon();
 
-        $this->casts += [
-            Cart::fopt() => Cart::opt1Casts(),
-            Cart::sopt() => Cart::opt2Casts(),
-        ];
+        if (Cart::fopt()) {
+            $this->casts += [
+                Cart::fopt() => Cart::opt1Casts(),
+            ];
+        }
+        if (Cart::sopt()) {
+            $this->casts += [
+                Cart::sopt() => Cart::opt2Casts(),
+            ];
+        }
     }
 
     public function getSubTotalAttribute(): float

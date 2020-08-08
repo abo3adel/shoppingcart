@@ -61,7 +61,7 @@ trait GetConfigKeysTrait
      *
      * @return string
      */
-    public function opt1Casts(): string
+    public function opt1Casts(): ?string
     {
         return $this->config('casts.opt1');
     }
@@ -71,7 +71,7 @@ trait GetConfigKeysTrait
      *
      * @return string
      */
-    public function opt2Casts(): string
+    public function opt2Casts(): ?string
     {
         return $this->config('casts.opt2');
     }

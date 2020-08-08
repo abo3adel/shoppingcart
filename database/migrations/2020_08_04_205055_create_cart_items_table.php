@@ -16,7 +16,15 @@ class CreateCartItemsTable extends Migration
     {
         Schema::create('cart_items' . Cart::tbAddon(), function (Blueprint $table) {
             $table->unsignedBigInteger('id', true);
-            $table->unsignedBigInteger('user_id');
+
+            // fix for laravel 5.5+
+            if ((float) app()->version() < 5.8) {
+                $table->integer('user_id', false, true);
+            } else {
+                // laravel 5.8+ uses
+                $table->bigInteger('user_id', false, true);
+            }
+
             $table->integer('qty', false, true);
             if (Cart::fopt()) {
                 $table->string(Cart::fopt())->nullable();
