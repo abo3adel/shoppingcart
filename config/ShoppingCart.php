@@ -25,8 +25,11 @@ return [
     ],
 
     // database only
+    // * you must shedule the RemoveOldItemsCommand
     // this allows to delete items older than configured period
     // in days
-    // * you must shedule the RemoveOldItemsCommand
-    'deleteAfter' => 15  
+    'deleteAfter' => 15,
+
+    // default authentication guard
+    "defaultGuard" => null,
 ];

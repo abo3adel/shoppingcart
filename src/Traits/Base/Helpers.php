@@ -4,6 +4,7 @@ namespace Abo3adel\ShoppingCart\Traits\Base;
 
 use Abo3adel\ShoppingCart\Cart;
 use Abo3adel\ShoppingCart\CartItem;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\DB;
 
 trait Helpers
@@ -23,7 +24,7 @@ trait Helpers
         string $dec_point = '.',
         string $thousands_sep = ','
     ) {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             $sum = $this->dbSum('price * qty');
 
             if ($formated) {
@@ -61,7 +62,7 @@ trait Helpers
      */
     public function totalPrice(): float
     {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             return $this->dbSum('price');
         }
 
@@ -75,7 +76,7 @@ trait Helpers
      */
     public function totalQty(): int
     {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             return (int) $this->dbSum('qty');
         }
 
@@ -155,7 +156,7 @@ trait Helpers
         }
 
         $item->qty += $by;
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             $item->update();
         } else {
             $this->update($item->id, $item->qty);
@@ -182,13 +183,26 @@ trait Helpers
         }
 
         $item->qty -= $by;
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             $item->update();
         } else {
             $this->update($item->id, $item->qty);
         }
 
         return $item;
+    }
+
+    /**
+     * set current user
+     *
+     * @param User $user
+     * @return self
+     */
+    public function forUser(User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     /**
@@ -202,7 +216,7 @@ trait Helpers
         return round(
             DB::table(Cart::tbName())
                 ->selectRaw('SUM(' . $exp . ') AS total')
-                ->where('user_id', auth()->id())
+                ->where('user_id', $this->user->id)
                 ->where('instance', $this->instance)
                 ->first()->total,
             2

@@ -30,9 +30,19 @@ class ShoppingCartCtrl
      */
     private $tax;
 
+    /**
+     * manage this user items
+     *
+     * @var User
+     */
+    private $user;
+
     public function __construct()
     {
         $this->instance = $this->instance ?? $this->config('defaultInstance');
+
+        // reset user
+        $this->user = null;
 
         if (!session()->has($this->sessionName())) {
             session()->put($this->sessionName(), []);
@@ -55,10 +65,10 @@ class ShoppingCartCtrl
         int $itemId,
         ?string $buyableType = null
     ): ?CartItem {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             if (null !== $buyableType) {
                 return CartItem::whereInstance($this->instance)
-                    ->whereUserId(auth()->id())
+                    ->whereUserId($this->user->id)
                     ->where('buyable_id', $itemId)
                     ->where('buyable_type', $buyableType)
                     ->first();
@@ -95,7 +105,7 @@ class ShoppingCartCtrl
         int $itemId,
         ?string $buyableType = null
     ): bool {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             return !!($this->find($itemId, $buyableType));
         }
 
@@ -121,9 +131,9 @@ class ShoppingCartCtrl
      */
     public function content(): Collection
     {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             return CartItem::whereInstance($this->instance)
-                ->whereUserId(auth()->id())
+                ->whereUserId($this->user->id)
                 ->get();
         }
 
@@ -142,7 +152,7 @@ class ShoppingCartCtrl
      */
     public function delete(int $itemId): bool
     {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             $item = $this->find($itemId);
 
             if ($item->delete()) {
@@ -179,9 +189,9 @@ class ShoppingCartCtrl
      */
     public function destroy(): bool
     {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             $deleted = CartItem::whereInstance($this->instance)
-                ->whereUserId(auth()->id())
+                ->whereUserId($this->user->id)
                 ->delete();
 
             if ($deleted) {
@@ -268,7 +278,7 @@ class ShoppingCartCtrl
         $updatedItems = [];
 
         // check if user is loggedIn
-        $loggedIn = auth()->check();
+        $loggedIn = $this->checkAuth();
 
         foreach ($items as $item) {
             if (!$loggedIn) {
@@ -328,7 +338,7 @@ class ShoppingCartCtrl
      */
     public function refreshItemsBuyableObjects(): void
     {
-        if (auth()->check()) {
+        if ($this->checkAuth()) {
             return;
         }
 
@@ -364,5 +374,23 @@ class ShoppingCartCtrl
             )->delete();
 
         return $affected;
+    }
+
+    /**
+     * check if current user is logedIn
+     *
+     * @return boolean
+     */
+    private function checkAuth(): bool
+    {
+        $guard = Cart::getDefaultGuard();
+
+        if (auth($guard)->check()) {
+            $this->forUser(auth($guard)->user());
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -106,8 +106,24 @@ trait GetConfigKeysTrait
         return (int) $this->config('deleteAfter');
     }
 
+    /**
+     * ger default auth guard
+     *
+     * @return string|null
+     */
+    public function getDefaultGuard(): ?string
+    {
+        return $this->config('defaultGuard');
+    }
+
+    /**
+     * get provided config value
+     *
+     * @param string $key
+     * @return string|null
+     */
     private function config(string $key): ?string
     {
-        return config('shoppingcart.'. $key, null);
+        return config('shoppingcart.' . $key, null);
     }
 }
