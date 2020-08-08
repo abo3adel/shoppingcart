@@ -94,4 +94,17 @@ class CartItemTest extends TestCase
             $item->qty
         );
     }
+
+    public function testItHasFormatedSubTotal()
+    {
+        $item = Cart::add(
+            factory(SpaceCraft::class)->create(['price' => 25.312545454]),
+            5
+        );
+
+        $this->assertSame(
+            \number_format($item->sub_total, 2),
+            $item->sub_total()
+        );
+    }
 }

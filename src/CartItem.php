@@ -40,6 +40,14 @@ class CartItem extends Model
         return round($this->price * $this->qty, 2);
     }
 
+    public function sub_total(
+        int $decimals = 2,
+        string $dec_point = '.',
+        string $thousands_sep = ','
+    ): string {
+        return \number_format($this->sub_total, $decimals, $dec_point, $thousands_sep);
+    }
+
     /**
      * Get the owning buyable model
      *
