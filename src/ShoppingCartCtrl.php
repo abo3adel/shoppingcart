@@ -232,7 +232,7 @@ class ShoppingCartCtrl
             $toBeUpdated = [
                 'qty' => $item->qty,
                 'price' => $item->price,
-                'options' => $item->options,
+                'options' => json_encode($item->options),
                 // 'instance' => $this->instance
             ];
 
@@ -247,12 +247,15 @@ class ShoppingCartCtrl
                 $toBeUpdated += [$opt2 => $item->{$opt2}];
             }
 
-            $item = CartItem::updateOrCreate([
+            DB::disableQueryLog();
+            DB::beginTransaction();
+            $item = DB::table(Cart::tbName())->updateOrInsert([
                 'instance' => $item->instance,
                 'user_id' => $user->id,
                 'buyable_id' => $item->buyable_id,
                 'buyable_type' => $item->buyable_type,
             ], $toBeUpdated);
+            DB::commit();
         });
 
         session([$this->sessionName() => []]);

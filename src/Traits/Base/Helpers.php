@@ -160,6 +160,7 @@ trait Helpers
         }
 
         $item->qty += $by;
+        unset($item->buyable);
         if ($this->checkAuth()) {
             $item->update();
         } else {
