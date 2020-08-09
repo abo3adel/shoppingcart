@@ -99,6 +99,8 @@ trait AddingMethod
 
         event(new CartItemAdded($item));
 
+        $item->loadMissing('buyable');
+
         return $item;
     }
 
