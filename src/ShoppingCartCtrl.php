@@ -87,6 +87,10 @@ class ShoppingCartCtrl
 
         $cartItem = is_array($item) ? new CartItem($item) : $item;
 
+        if ($cartItem) {
+            $cartItem->loadMissing('buyable');
+        }
+
         return  $item['buyable_type'] ? $cartItem : null;
     }
 
@@ -136,7 +140,9 @@ class ShoppingCartCtrl
         return collect(session($this->sessionName()))
             ->whereStrict('instance', $this->instance)
             ->map(function ($item) {
-                return is_array($item) ? new CartItem($item) : $item;
+                $item = is_array($item) ? new CartItem($item) : $item;
+                $item->loadMissing('buyable');
+                return $item;
             });
     }
 

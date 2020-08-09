@@ -35,4 +35,27 @@ class RetrivingContentTest extends TestCase
 
         $this->testGuestCanGetCartContent();
     }
+
+    public function testItemWillLoadBuyable()
+    {
+        $item = $this->createItem(4, [
+            'price' => 5.5
+        ]);
+
+        $item = Cart::content()->random();
+
+        $this->assertSame(
+            cart()->find($item->id)
+                // ->loadMissing('buyable')
+                ->toJson(),
+            $item->toJson()
+        );
+    }
+
+    public function testItWillWorkForUserBuyable()
+    {
+        $this->signIn();
+
+        $this->testItemWillLoadBuyable();
+    }
 }
