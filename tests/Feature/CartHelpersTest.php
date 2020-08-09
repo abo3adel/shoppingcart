@@ -114,13 +114,20 @@ class CartHelpersTest extends TestCase
 
     public function testIncrementItemQty()
     {
-        $item = $this->createItemWithData(3, 25, 10);
+        $buyable = factory(Car::class)->create([
+            'price' => 25,
+            'qty' => 40
+        ]);
+        $item = $buyable->addToCart(10);
         Cart::increments($item->id, 5);
 
         $this->assertSame(
             15,
             Cart::find($item->id)->qty
         );
+
+        // incrementing greater than buyable qty
+        $this->assertNull(Cart::increments($item->id, 26));
 
         if (auth()->check()) {
             $this->assertDatabaseHas(Cart::tbName(), [

@@ -145,13 +145,17 @@ trait Helpers
      */
     public function increments($itemId, int $by = 1): ?CartItem
     {
-        $item = ($itemId instanceof CartItem) ?
-            $itemId :
-            $this->find($itemId);
+        if ($itemId instanceof CartItem) {
+            $item = $itemId;
+            $item->loadMissing('buyable');
+            $item->buyable = (object) $item->buyable;
+        } else {
+            $item = $this->find($itemId);
+        }
 
-        // if $by is greater than buyable qty
+        // if the updated qty will be greater than buyable qty
         // then abort updating
-        if ($by > (int) $item->buyable->qty) {
+        if (($item->qty + $by) > (int) $item->buyable->qty) {
             return null;
         }
 
