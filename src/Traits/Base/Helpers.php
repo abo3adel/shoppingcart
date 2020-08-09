@@ -180,9 +180,9 @@ trait Helpers
     {
         $item = is_int($itemId) ? $this->find($itemId) : $itemId;
 
-        // if $by is greater than item qty
+        // if the new qty will be less than one
         // then abort updating
-        if ($by > $item->qty) {
+        if (($item->qty - $by) < 1) {
             return null;
         }
 

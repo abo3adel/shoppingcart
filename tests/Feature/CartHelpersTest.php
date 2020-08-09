@@ -145,13 +145,20 @@ class CartHelpersTest extends TestCase
 
     public function testItCanDecrementQty()
     {
-        $item = $this->createItemWithData(3, 25, 10);
+        $buyable = factory(Car::class)->create([
+            'price' => 25,
+            'qty' => 40
+        ]);
+        $item = $buyable->addToCart(10);
         Cart::decrements($item->id, 4);
 
         $this->assertSame(
             6,
             Cart::find($item->id)->qty
         );
+
+        // decrement of 1
+        $this->assertNull(Cart::decrements($item->id, 7));
 
         if (auth()->check()) {
             $this->assertDatabaseHas(Cart::tbName(), [
