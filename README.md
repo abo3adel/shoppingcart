@@ -8,7 +8,7 @@ Highly inspired by [LaravelShoppingcart](https://github.com/Crinsane/LaravelShop
 
 [![Latest Stable Version](https://poser.pugx.org/abo3adel/shoppingcart/v)](//packagist.org/packages/abo3adel/shoppingcart) [![Total Downloads](https://poser.pugx.org/abo3adel/shoppingcart/downloads)](//packagist.org/packages/abo3adel/shoppingcart) [![Latest Unstable Version](https://poser.pugx.org/abo3adel/shoppingcart/v/unstable)](//packagist.org/packages/abo3adel/shoppingcart) [![License](https://poser.pugx.org/abo3adel/shoppingcart/license)](//packagist.org/packages/abo3adel/shoppingcart)
 
-#### Demo ```coming soon```
+#### Demo [shopping-cart](http://spa.aboadeltestblog.epizy.com/)
 
 ## Features
 
