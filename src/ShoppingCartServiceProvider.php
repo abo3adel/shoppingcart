@@ -55,7 +55,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/ShoppingCart.php' => config_path('shoppingcart.php'),
+                __DIR__ . '/../config/shoppingcart.php' => config_path('shoppingcart.php'),
 
                 // publish migrations
                 __DIR__ . '/../database/migrations/2020_08_04_205055_create_cart_items_table.php' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_cart_items_table.php'),
